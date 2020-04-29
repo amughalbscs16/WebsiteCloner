@@ -1,2 +1,0 @@
-# WebsiteCloner
-UpWork Website Cloner

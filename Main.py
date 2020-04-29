@@ -9,15 +9,20 @@ print(folder)
 print(path)
 if not os.path.isdir(path):
     os.mkdir(path)
+#Dictionary FileName to check if new name to allot
 files_dict = {}
-
+#For not Duplicating files already downloaded contains URLs, Location in PC
+link_file = {}
 def DownloadFile(fileURL):
+
+    if fileURL == "" or fileURL == " " :
+        return fileURL
     if fileURL[0:2] == "//":
         print("Could not deal with this", fileURL)
         return fileURL
     if fileURL[0] == '.':
         print("Could not deal with this", fileURL)
-        return fileURL
+        return ""
     try:
         TrueFile = False
         #If File has correct extension after '.'
@@ -30,31 +35,62 @@ def DownloadFile(fileURL):
                 break
             
         print(fileURL, TrueFile)
-        if fileURL == "" or fileURL == " " or not TrueFile:
-            return fileURL
+        if not TrueFile:
+            return ""
         if fileURL[0] == "/":
             fileURL = url + fileURL
         
         if '?' not in fileURL or '?ver' in fileURL :
+            #Do Not Duplicate Files
+            if fileURL in link_file:
+                return link_file[fileURL]
+            #If File has complete URL now
             if fileURL[0:4] == "http":
                 #Get the file 
                 file = requests.get(fileURL)
-                print(file)
-                #Generate file name
-                fileName = os.path.join(path,os.path.split(fileURL)[-1].split('?')[0])
+                #print(file)
+                fileName = ''
+                print(files_dict)
+                print(os.path.split(fileURL)[-1].split('?')[0])
+                #Generate file name check if file with same name downloaded already
+                it=0
+                split_path = os.path.split(fileURL)[-1].split('?')[0].split('.') 
+                #print(split_path)
+                #Join if the file path has multiple '.'
+                fileName = split_path[0]
+                for dotSepExt in split_path[1:]:
+                    fileName += '.' + dotSepExt
+
+                while fileName in files_dict:
+                    it += 1
+                    fileName = split_path[0] + str(it)
+                    for dotSepExt in split_path[1:]:
+                        fileName += '.' + dotSepExt
+                    print(fileName, "New Name")
+
+                files_dict[fileName] = 1    
+                print(split_path)
+                fileSaveName = os.path.join(path,fileName)
+                
+                #Add location of new downloaded file
+                link_file[fileURL] = fileSaveName
+
+                #print("File to Save name with, ", fileSaveName)
                 #print(fileName+"; FileName")
-                #Check if the file is already in the directory_fileoriginalname
-                saveFile = open(fileName, 'wb')
+                #Check if the file is already in the directory_file originalname
+                saveFile = open(fileSaveName, 'wb')
                 #Write File
                 for line in file:
                     saveFile.write(line)
                 saveFile.close()
-                return fileName
+                #print(files_dict)
+                return fileSaveName
         else:
             #To Deal with it
-            return fileURL
-    except:
-        print("Error", fileURL)
+            return ""
+    except Exception as E:
+        print("*****Error*****", fileURL, E)
+        
 
 page = requests.get(url, time.sleep(2))
 #print(page.content)
