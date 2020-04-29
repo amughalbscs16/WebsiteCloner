@@ -12,6 +12,12 @@ if not os.path.isdir(path):
 files_dict = {}
 
 def DownloadFile(fileURL):
+    if fileURL[0:2] == "//":
+        print("Could not deal with this", fileURL)
+        return fileURL
+    if fileURL[0] == '.':
+        print("Could not deal with this", fileURL)
+        return fileURL
     try:
         TrueFile = False
         #If File has correct extension after '.'
@@ -26,11 +32,9 @@ def DownloadFile(fileURL):
         print(fileURL, TrueFile)
         if fileURL == "" or fileURL == " " or not TrueFile:
             return fileURL
-        
         if fileURL[0] == "/":
             fileURL = url + fileURL
-        if fileURL[0] == '.': 
-            pass
+        
         if '?' not in fileURL or '?ver' in fileURL :
             if fileURL[0:4] == "http":
                 #Get the file 
@@ -79,16 +83,19 @@ for i in range(0,len(soup.findAll('img'))):
     print(soup.findAll('img')[i]['src'])
     soup.findAll('img')[i]['src'] = DownloadFile(soup.findAll('img')[i]['src'])
 
-for i in range(0,len(soup.findAll('img'))):
-    if 'src' in soup.findAll('script')[i]: 
-        print(soup.findAll('script')[i]['src'])
-        soup.findAll('script')[i]['src'] = DownloadFile(soup.findAll('script')[i]['src'])
+for i in range(0,len(soup.findAll('script'))):
+    try:
+        print(soup.findAll('script')[i],'\n\n')
+        if 'src' in str(soup.findAll('script')[i]): 
+            print(soup.findAll('script')[i]['src'])
+            soup.findAll('script')[i]['src'] = DownloadFile(soup.findAll('script')[i]['src'])
+    except:
+        print(soup.findAll('script'))
 
 for i in range(0,len(soup.findAll('link'))):
     #print(images[i]['src'])
     print(soup.findAll('link')[i]['href'])
     soup.findAll('link')[i]['href'] = DownloadFile(soup.findAll('link')[i]['href'])
-
 
 #soup.find('img')['src'] = DownloadFile(soup.find('img')['src'])
 
