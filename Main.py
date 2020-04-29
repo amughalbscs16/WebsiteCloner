@@ -12,28 +12,48 @@ if not os.path.isdir(path):
 files_dict = {}
 
 def DownloadFile(fileURL):
-    if '?' not in fileURL:
-        if fileURL[0] == "/" or fileURL[0] == '.':
+    try:
+        TrueFile = False
+        #If File has correct extension after '.'
+        for x in ['css','js','jpeg','jpg','ico','png','img','bmp','svg']:
+            for y in fileURL.split('.'):
+                if x in y[0:len(x)].lower():
+                    TrueFile = True
+                    break
+            if TrueFile:
+                break
+            
+        print(fileURL, TrueFile)
+        if fileURL == "" or fileURL == " " or not TrueFile:
+            return fileURL
+        
+        if fileURL[0] == "/":
+            fileURL = url + fileURL
+        if fileURL[0] == '.': 
             pass
-        elif fileURL[0:4] == "http":
-            #Get the file 
-            file = requests.get(fileURL)
-            print(file)
-            #Generate file name
-            fileName = os.path.join(path,os.path.split(fileURL)[1])
-            print(fileName)
-            #Check if the file is already in the directory_fileoriginalname
-            saveFile = open(fileName, 'wb')
-            #Write File
-            for line in file:
-                saveFile.write(line)
-            saveFile.close()
-            return fileName
-    else:
-        pass
+        if '?' not in fileURL or '?ver' in fileURL :
+            if fileURL[0:4] == "http":
+                #Get the file 
+                file = requests.get(fileURL)
+                print(file)
+                #Generate file name
+                fileName = os.path.join(path,os.path.split(fileURL)[-1].split('?')[0])
+                #print(fileName+"; FileName")
+                #Check if the file is already in the directory_fileoriginalname
+                saveFile = open(fileName, 'wb')
+                #Write File
+                for line in file:
+                    saveFile.write(line)
+                saveFile.close()
+                return fileName
+        else:
+            #To Deal with it
+            return fileURL
+    except:
+        print("Error", fileURL)
 
 page = requests.get(url, time.sleep(2))
-print(page.content)
+#print(page.content)
 
 #Testing File Writes
 file = open('index.html','w')
@@ -50,10 +70,29 @@ soup = BeautifulSoup(page.content, 'html.parser')
 #print(soup.prettify())
 #soup.find('img')['src'] = 2
 
-print(soup.find('img')['src'])
-soup.find('img')['src'] = DownloadFile(soup.find('img')['src'])
+#print(soup.find('img')['src'])
+#images = soup.findAll('img')
+#print(images)
 
-print(soup.find('img')['src'])
+#Images are downloading
+for i in range(0,len(soup.findAll('img'))):
+    print(soup.findAll('img')[i]['src'])
+    soup.findAll('img')[i]['src'] = DownloadFile(soup.findAll('img')[i]['src'])
+
+for i in range(0,len(soup.findAll('img'))):
+    if 'src' in soup.findAll('script')[i]: 
+        print(soup.findAll('script')[i]['src'])
+        soup.findAll('script')[i]['src'] = DownloadFile(soup.findAll('script')[i]['src'])
+
+for i in range(0,len(soup.findAll('link'))):
+    #print(images[i]['src'])
+    print(soup.findAll('link')[i]['href'])
+    soup.findAll('link')[i]['href'] = DownloadFile(soup.findAll('link')[i]['href'])
+
+
+#soup.find('img')['src'] = DownloadFile(soup.find('img')['src'])
+
+#print(soup.find('img')['src'])
 file.write(soup.prettify())
 file.close()
 
