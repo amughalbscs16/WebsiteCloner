@@ -4,11 +4,15 @@ from bs4 import BeautifulSoup
 url = 'https://www.wlvpn.com'
 #Requests Library, get webpage wait for 5 seconds()
 folder = url.split('.')[1]
-path = os.path.join(os.getcwd(), folder)
+tmppath = os.path.join(os.getcwd(),'project')
+path = os.path.join(tmppath, folder)
 print(folder)
 print(path)
+if not os.path.isdir(tmppath):
+    os.mkdir(tmppath)
 if not os.path.isdir(path):
     os.mkdir(path)
+
 #Dictionary FileName to check if new name to allot
 files_dict = {}
 #For not Duplicating files already downloaded contains URLs, Location in PC
@@ -17,16 +21,17 @@ def DownloadFile(fileURL):
 
     if fileURL == "" or fileURL == " " :
         return fileURL
+    #To Deal with this file Now
     if fileURL[0:2] == "//":
         print("Could not deal with this", fileURL)
-        return fileURL
+        return "http:"+fileURL
     if fileURL[0] == '.':
         print("Could not deal with this", fileURL)
-        return ""
+        return fileURL
     try:
         TrueFile = False
         #If File has correct extension after '.'
-        for x in ['css','js','jpeg','jpg','ico','png','img','bmp','svg']:
+        for x in ['css','js','jpeg','jpg','ico','png','img','bmp','svg','gif']:
             for y in fileURL.split('.'):
                 if x in y[0:len(x)].lower():
                     TrueFile = True
@@ -86,17 +91,18 @@ def DownloadFile(fileURL):
                 #print(files_dict)
                 return fileSaveName
         else:
-            #To Deal with it
+            #To Deal with it if files hai ? and not ver
             return ""
     except Exception as E:
         print("*****Error*****", fileURL, E)
+        return fileURL
         
 
 page = requests.get(url, time.sleep(2))
 #print(page.content)
 
 #Testing File Writes
-file = open('index.html','w')
+file = open(os.path.join(path,'index.html'),'wb')
 #file.write(str(page.content, 'utf-8'))
 #file.close()
 
@@ -136,7 +142,12 @@ for i in range(0,len(soup.findAll('link'))):
 #soup.find('img')['src'] = DownloadFile(soup.find('img')['src'])
 
 #print(soup.find('img')['src'])
-file.write(soup.prettify())
+file.write(soup.encode('utf-8'))
 file.close()
 
 
+
+#Other Option
+#Another Option
+#Request Header for each website, and check which version extension is the file
+#and download accordingly.
