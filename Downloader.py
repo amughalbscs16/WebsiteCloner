@@ -1,8 +1,8 @@
 import requests, time
 import os
 from bs4 import BeautifulSoup
-def DownloadFile(fileURL, path, files_dict, link_file):
-    fileExtensions = ['css','js','jpeg','jpg','ico','png','img','bmp','svg','gif','javascript', 'json', 'map', 'html']
+def DownloadFile(url,fileURL, path, files_dict, link_file):
+    fileExtensions = ['css','js','jpeg','jpg','ico','png','img','bmp','svg','gif','javascript', 'json', 'map', 'html', 'xml']
     if fileURL == "" or fileURL == " " :
         return fileURL
     
@@ -31,7 +31,7 @@ def DownloadFile(fileURL, path, files_dict, link_file):
             return fileURL
         
         
-        if '?' not in fileURL or TrueFile :
+        if TrueFile :
             #Do Not Duplicate Files
             if fileURL in link_file:
                 return link_file[fileURL]

@@ -405,7 +405,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 		<div class="col-2">
 			<h4><a href="/showcase/">WordPress&nbsp;Users</a></h4>
 			<ul id="notable-users">
-				<li><a href='https://wordpress.org/showcase/playstationblog/'><img src='https://s.w.org/images/notableusers/playstation-2x.png' alt='playstation' width='130' height='57' /></a></li><li><a href='https://wordpress.org/showcase/themarthablog/'><img src='https://s.w.org/images/notableusers/marthastewart-2x.png' alt='marthastewart' width='130' height='57' /></a></li><li><a href='https://wordpress.org/showcase/blondie/'><img src='https://s.w.org/images/notableusers/blondie-2x.png' alt='blondie' width='130' height='57' /></a></li>			</ul>
+				<li><a href='https://wordpress.org/showcase/themarthablog/'><img src='https://s.w.org/images/notableusers/marthastewart-2x.png' alt='marthastewart' width='130' height='57' /></a></li><li><a href='https://wordpress.org/showcase/blondie/'><img src='https://s.w.org/images/notableusers/blondie-2x.png' alt='blondie' width='130' height='57' /></a></li><li><a href='https://wordpress.org/showcase/playstationblog/'><img src='https://s.w.org/images/notableusers/playstation-2x.png' alt='playstation' width='130' height='57' /></a></li>			</ul>
 			<p id="showcase-link"><a href="https://wordpress.org/showcase/">&hellip; and hundreds more</a></p>
 		</div>
 	</div>
