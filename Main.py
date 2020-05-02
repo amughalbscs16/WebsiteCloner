@@ -65,7 +65,7 @@ def cloner(url):
     file.write(soup.encode('utf-8'))
     file.close()
 
-cloner(url)
+#cloner(url)
 
 #Other Option
 #Another Option
