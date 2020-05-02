@@ -2,7 +2,7 @@ import requests, time
 import os
 from bs4 import BeautifulSoup
 def DownloadFile(url,fileURL, path, files_dict, link_file):
-    fileExtensions = ['css','js','jpeg','jpg','ico','png','img','bmp','svg','gif','javascript', 'json', 'map', 'html', 'xml']
+    fileExtensions = ['css','js','jpeg','jpg','ico','png','img','bmp','svg','gif','javascript', 'json', 'map', 'xml']
     if fileURL == "" or fileURL == " " :
         return fileURL
     
@@ -31,7 +31,7 @@ def DownloadFile(url,fileURL, path, files_dict, link_file):
             return fileURL
         
         
-        if TrueFile :
+        if '?' not in fileURL or TrueFile :
             #Do Not Duplicate Files
             if fileURL in link_file:
                 return link_file[fileURL]
@@ -77,7 +77,7 @@ def DownloadFile(url,fileURL, path, files_dict, link_file):
                 #Add location of new downloaded file
                 link_file[fileURL] = fileName
 
-                #print("File to Save name with, ", fileSaveName)
+                print("File to Save name with, ", fileSaveName)
                 #print(fileName+"; FileName")
                 #Check if the file is already in the directory_file originalname
                 saveFile = open(fileSaveName, 'wb')
@@ -91,9 +91,9 @@ def DownloadFile(url,fileURL, path, files_dict, link_file):
                 return fileName
 
         else:
-            #To Deal with it if files hai ? and not ver
+            #To deal with resources written has
             return fileURL
     except Exception as E:
-        print("*****Error*****", fileURL, E)
+        print("*****Not Available/Could Not Download*****", fileURL, E)
         return fileURL
         
