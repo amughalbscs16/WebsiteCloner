@@ -1,10 +1,10 @@
 from Downloader import *
-
+import base64
 url = 'https://www.wlvpn.com/'
 
 def cloner(url):
     tmppath = os.path.join(os.getcwd(),'project')
-    folder = url.split('.')[1]+"-"+url.split('.')[2]
+    folder = str(base64.b64encode(bytes(url,'utf-8')),'utf-8')
     path = os.path.join(tmppath, folder)
     if not os.path.isdir(tmppath):
         os.mkdir(tmppath)
