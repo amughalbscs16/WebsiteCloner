@@ -1,7 +1,10 @@
 import requests, time
 import os
 from bs4 import BeautifulSoup
+import base64
+
 def DownloadFile(url,fileURL, path, files_dict, link_file):
+    
     fileExtensions = ['css','js','jpeg','jpg','ico','png','img','bmp','svg','gif','javascript', 'json', 'map', 'xml']
     if fileURL == "" or fileURL == " " :
         return fileURL
@@ -17,8 +20,11 @@ def DownloadFile(url,fileURL, path, files_dict, link_file):
     try:
         if fileURL[0] == "/":
             fileURL = url + fileURL
+        #If file is already downloaded
+        if fileURL in link_file:
+            return link_file[fileURL]
         TrueFile = False
-        #If File has correct extension after '.'
+        #If file is one of the types mentioned above
         file = requests.get(fileURL)
         print(fileURL,file.headers['Content-Type'])
         for x in fileExtensions:
@@ -26,6 +32,8 @@ def DownloadFile(url,fileURL, path, files_dict, link_file):
                 TrueFile = True
                 break
             
+        #Deal with the directory structure
+        
         print(fileURL, TrueFile)
         if not TrueFile:
             return fileURL
@@ -47,9 +55,10 @@ def DownloadFile(url,fileURL, path, files_dict, link_file):
                 it=0
                 split_path = os.path.split(fileURL)[-1].split('?')[0].split('.') 
                 #print(split_path)
-                
+                makeDirectory(link_file, fileURL):
+                    
                 #URLS with no file name but extensions
-                if (len(split_path) == 1) and split_path[0] in fileExtensions:
+                """if (len(split_path) == 1) and split_path[0] in fileExtensions:
                     fileName = str(it)+"."+split_path[0]
                     while fileName in files_dict:
                         it+=1
@@ -69,13 +78,14 @@ def DownloadFile(url,fileURL, path, files_dict, link_file):
                     for dotSepExt in split_path[1:]:
                         fileName += '.' + dotSepExt
                     #print(fileName, "New Name")
+                """
 
-                files_dict[fileName] = 1    
+                files_dict[fileSaveName] = 1    
                 #print(split_path)
                 fileSaveName = os.path.join(path,fileName)
                 
                 #Add location of new downloaded file
-                link_file[fileURL] = fileName
+                link_file[fileURL] = fileSaveName
 
                 print("File to Save name with, ", fileSaveName)
                 #print(fileName+"; FileName")

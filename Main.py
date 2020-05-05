@@ -1,5 +1,5 @@
 from Downloader import *
-import base64
+
 url = 'https://www.wlvpn.com/'
 
 def cloner(url):
