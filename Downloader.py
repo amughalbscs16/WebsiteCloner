@@ -3,7 +3,22 @@ import os
 from bs4 import BeautifulSoup
 import base64
 
-def DownloadFile(url,fileURL, path, files_dict, link_file):
+def makeDirectory(link_file, path, fileURL):
+    fileURLNew = fileURL.split('//')[1]
+    fileURLSplit = fileURLNew.split('/');
+    newdirectory = path
+    if (len(fileURLSplit)>2):
+        for folder in fileURLSplit[1:len(fileURLSplit)-1]:
+            newdirectory = os.path.join(newdirectory, folder);
+            if not os.isdir(newdirectory):
+                os.mkdir(newdirectory)
+        return newdirectory 
+    #If there is no / structure in url
+    else:
+        return path
+
+
+def DownloadFile(url,fileURL, path, files_dict, link_file,):
     
     fileExtensions = ['css','js','jpeg','jpg','ico','png','img','bmp','svg','gif','javascript', 'json', 'map', 'xml']
     if fileURL == "" or fileURL == " " :
@@ -43,6 +58,7 @@ def DownloadFile(url,fileURL, path, files_dict, link_file):
             #Do Not Duplicate Files
             if fileURL in link_file:
                 return link_file[fileURL]
+            #Link File URL->FileDirectory
             #If File has complete URL now
             if fileURL[0:4] == "http":
                 #Get the file 
@@ -55,8 +71,8 @@ def DownloadFile(url,fileURL, path, files_dict, link_file):
                 it=0
                 split_path = os.path.split(fileURL)[-1].split('?')[0].split('.') 
                 #print(split_path)
-                makeDirectory(link_file, fileURL):
-                    
+                directory = makeDirectory(link_file, path, fileURL):
+                file_directory = 
                 #URLS with no file name but extensions
                 """if (len(split_path) == 1) and split_path[0] in fileExtensions:
                     fileName = str(it)+"."+split_path[0]
