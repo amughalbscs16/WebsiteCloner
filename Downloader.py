@@ -6,7 +6,7 @@ import base64
 def makeDirectory(path, fileURL):
     fileURLNew = fileURL.split('//')[1]
     fileURLSplit = fileURLNew.split('/');
-    newdirectory = path
+    newdirectory = ''
     if (len(fileURLSplit)>2):
         for folder in fileURLSplit[1:len(fileURLSplit)-1]:
             newdirectory = os.path.join(newdirectory, folder);
@@ -15,7 +15,7 @@ def makeDirectory(path, fileURL):
         return newdirectory
     #If there is no / structure in url
     else:
-        return path
+        return ""
 
 
 def getFileNameInDir(newdirectory, files_dict, split_path, fileExtensions, link_file=None ):
@@ -104,12 +104,14 @@ def DownloadFile(url,fileURL, path, files_dict, link_file):
                 #Create a directory
                 directory = makeDirectory(path, fileURL);
                 
-                fileSaveName = getFileNameInDir(directory, files_dict, split_path, fileExtensions)
-                
+                #It is non absolute path
+                fileDownloadName = getFileNameInDir(directory, files_dict, split_path, fileExtensions)
+                #It is the absolute path
+                fileSaveName = os.path.join(path, fileDownloadName);
                 #Add location of new downloaded file
-                link_file[fileURL] = fileSaveName
-
-                print("File to Save name with, ", fileSaveName)
+                link_file[fileURL] = fileDownloadName
+                #Making the File Save Directory non Absolute
+                print("File to Save directory, ", fileDownloadName)
                 #print(fileName+"; FileName")
                 #Check if the file is already in the directory_file originalname
                 saveFile = open(fileSaveName, 'wb')
@@ -120,7 +122,7 @@ def DownloadFile(url,fileURL, path, files_dict, link_file):
                 saveFile.close()
                 #print(files_dict)
                 #return fileSaveName
-                return fileSaveName
+                return fileDownloadName
 
         else:
             #To deal with resources written has
