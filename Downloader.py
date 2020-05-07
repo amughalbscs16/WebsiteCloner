@@ -10,7 +10,7 @@ def makeDirectory(path, fileURL):
     if (len(fileURLSplit)>2):
         for folder in fileURLSplit[1:len(fileURLSplit)-1]:
             newdirectory = os.path.join(newdirectory, folder);
-            if not os.isdir(newdirectory):
+            if not os.path.isdir(newdirectory):
                 os.mkdir(newdirectory)
         return newdirectory
     #If there is no / structure in url
@@ -120,7 +120,7 @@ def DownloadFile(url,fileURL, path, files_dict, link_file):
                 saveFile.close()
                 #print(files_dict)
                 #return fileSaveName
-                return fileName
+                return fileSaveName
 
         else:
             #To deal with resources written has
