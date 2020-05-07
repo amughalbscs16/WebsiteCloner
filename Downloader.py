@@ -5,17 +5,17 @@ import base64
 
 def makeDirectory(path, fileURL):
     fileURLNew = fileURL.split('//')[1]
-    fileURLSplit = fileURLNew.split('/');
-    newdirectory = ''
+    fileURLSplit = fileURLNew.split('/')
+    SaveDirectory = path
+    HTMLdirectory = ""
     if (len(fileURLSplit)>2):
         for folder in fileURLSplit[1:len(fileURLSplit)-1]:
-            newdirectory = os.path.join(newdirectory, folder);
-            if not os.path.isdir(newdirectory):
-                os.mkdir(newdirectory)
-        return newdirectory
-    #If there is no / structure in url
-    else:
-        return ""
+            SaveDirectory = os.path.join(SaveDirectory, folder);
+            if not os.path.isdir(SaveDirectory):
+                os.mkdir(SaveDirectory)
+            HTMLdirectory = os.path.join(HTMLdirectory, folder);
+    
+    return SaveDirectory, HTMLdirectory
 
 
 def getFileNameInDir(newdirectory, files_dict, split_path, fileExtensions, link_file=None ):
@@ -102,16 +102,20 @@ def DownloadFile(url,fileURL, path, files_dict, link_file):
                 split_path = os.path.split(fileURL)[-1].split('?')[0].split('.') 
                 #print(split_path)
                 #Create a directory
-                directory = makeDirectory(path, fileURL);
+                SaveDirectory, HTMLDirectory = makeDirectory(path, fileURL);
                 
                 #It is non absolute path
-                fileDownloadName = getFileNameInDir(directory, files_dict, split_path, fileExtensions)
-                #It is the absolute path
-                fileSaveName = os.path.join(path, fileDownloadName);
-                #Add location of new downloaded file
-                link_file[fileURL] = fileDownloadName
+                fileSaveName = getFileNameInDir(SaveDirectory, files_dict, split_path, fileExtensions)
+                fileHTMLName = os.path.join(HTMLDirectory, os.path.split(fileSaveName)[-1])
+
                 #Making the File Save Directory non Absolute
-                print("File to Save directory, ", fileDownloadName)
+                print("File to Save directory, ", fileHTMLName)
+
+                #It is the absolute path
+                fileSaveName = os.path.join(path, fileSaveName);
+                print(fileSaveName)
+                #Add location of new downloaded file
+                link_file[fileURL] = fileHTMLName
                 #print(fileName+"; FileName")
                 #Check if the file is already in the directory_file originalname
                 saveFile = open(fileSaveName, 'wb')
@@ -122,7 +126,7 @@ def DownloadFile(url,fileURL, path, files_dict, link_file):
                 saveFile.close()
                 #print(files_dict)
                 #return fileSaveName
-                return fileDownloadName
+                return fileHTMLName
 
         else:
             #To deal with resources written has
