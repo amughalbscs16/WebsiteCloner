@@ -1,5 +1,25 @@
+import os
+import posixpath
+def splitall(path):
+    allparts = []
+    while 1:
+        parts = os.path.split(path)
+        if parts[0] == path:  # sentinel for absolute paths
+            allparts.insert(0, parts[0])
+            break
+        elif parts[1] == path: # sentinel for relative paths
+            allparts.insert(0, parts[1])
+            break
+        else:
+            path = parts[0]
+            allparts.insert(0, parts[1])
+    return allparts
+
 def extractInternalCSS(path, fileURL, file):
-    #find ("url") tags in the file,
+    #find ("url") tags in the file
+    newdirectory = splitall(path)
+    #newdirectory = posixpath.split(newdirectory)
+    print(newdirectory)
     for i in range(0,len(file)):
 	    if 'url(' in file[i]:
 	    	#find the start of url( tag)
@@ -14,6 +34,9 @@ def extractInternalCSS(path, fileURL, file):
 
     		#download all the assets starting from ../ [for now]
     		if (resourceurl[0:3] == "../"):
+    			tmpresource = resourceurl.split("/")
+    			#newdirectory =
+
     			pass
     		#download all assets with resource name starting http
     		if (resourceurl[0:4] == "http"):
