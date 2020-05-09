@@ -34,7 +34,7 @@ def getFileNameInDir(newdirectory, files_dict, split_path, fileExtensions, link_
     #These files need a specific directory
     else:    
         fileName = split_path[0]
-        #Join if the file path has multiple '.'
+        #Join if the file path has multiple '.' .min.css types
         for dotSepExt in split_path[1:]:
             fileName += '.' + dotSepExt
         fileSaveName = os.path.join(newdirectory,fileName)
@@ -50,6 +50,7 @@ def getFileNameInDir(newdirectory, files_dict, split_path, fileExtensions, link_
 
 
 def DownloadFile(url,fileURL, path, files_dict, link_file):
+
     
     fileExtensions = ['css','js','jpeg','jpg','ico','png','img','bmp','svg','gif','javascript', 'json', 'map', 'xml']
     if fileURL == "" or fileURL == " " :
