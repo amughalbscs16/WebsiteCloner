@@ -13,10 +13,13 @@ def extractInternalCSS(path, fileURL, file):
 	    	#print(file[i])
 
     		#download all the assets starting from ../ [for now]
-
+    		if (resourceurl[0:3] == "../"):
+    			pass
     		#download all assets with resource name starting http
+    		if (resourceurl[0:4] == "http"):
+    			pass
 
-    		
+
 
 
     #download assets starting with https later.
