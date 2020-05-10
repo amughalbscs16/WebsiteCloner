@@ -1,5 +1,7 @@
 import os
+import requests
 import posixpath
+from functools import reduce 
 def splitall(path):
     allparts = []
     while 1:
@@ -33,18 +35,44 @@ def extractInternalCSS(HTMLpath, fileURL, file):
 	    	#print(file[i])
 	    	newdirectorysplit = splitall(HTMLpath)[0:-1]
     		#download all the assets starting from ../ [for now]
-
+    		fileURLsplit = fileURL.split("/")[0:-1]
+    		print(fileURLsplit)
     		if (resourceurl[0:3] == "../"):
     			#If .. go 1 directory back
     			tmpresource = resourceurl.split("/")
-    			print(tmpresource)
+    			#print(tmpresource)
     			for i in tmpresource:
     				if i == "..":
     					newdirectorysplit.pop(-1)
+    					fileURLsplit.pop(-1)
     				else:
     					newdirectorysplit.append(i)
-    			
-    			print(newdirectorysplit)
+    					fileURLsplit.append(i)
+    			#Prepare save Directory
+    			newdirectory = ''
+    			#create a folder for writing the file if not there:
+    			for i in newdirectorysplit[0:-1]:
+    				newdirectory = os.path.join(newdirectory, i)
+    				if not os.path.isdir(newdirectory):
+    					os.mkdir(newdirectory)
+    			#Prepare save URL
+    			#print("fileURLsplit", fileURLsplit)
+
+    			fileUrlResource = fileURLsplit[0]
+    			for i in fileURLsplit[1:]:
+    				fileUrlResource+= "/" + i
+
+    			filename = newdirectorysplit[-1].split("?")[0].split('#')[0]
+    			newdirectory = os.path.join(newdirectory, filename) # Save Directory
+    			#Download the resource
+    			downloadedAsset = requests.get(fileUrlResource)
+    			saveFile = open(newdirectory, 'wb')
+    			for line in downloadedAsset:
+    				saveFile.write(line)
+    			saveFile.close()
+
+    			#Just write in the proper directory, no need to change link in CSS for this
+    			print("FILE SAVE IN PC non absolute : ", newdirectory, "file Download URL:", fileUrlResource)
     			#newdirectory =
 
     			pass

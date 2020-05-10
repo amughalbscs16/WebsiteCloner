@@ -40,6 +40,11 @@ def cloner(url):
     #print(images)
 
     #Images are downloading
+    for i in range(0,len(soup.findAll('link'))):
+        #print(images[i]['src'])
+        #print(soup.findAll('link')[i]['href'])
+        soup.findAll('link')[i]['href'] = DownloadFile(url,soup.findAll('link')[i]['href'],path,files_dict, link_file)
+        
     for i in range(0,len(soup.findAll('img'))):
         #print(soup.findAll('img')[i]['src'])
         soup.findAll('img')[i]['src'] = DownloadFile(url,soup.findAll('img')[i]['src'], path, files_dict, link_file)
@@ -54,10 +59,7 @@ def cloner(url):
             pass
             #print(soup.findAll('script'))
 
-    for i in range(0,len(soup.findAll('link'))):
-        #print(images[i]['src'])
-        #print(soup.findAll('link')[i]['href'])
-        soup.findAll('link')[i]['href'] = DownloadFile(url,soup.findAll('link')[i]['href'],path,files_dict, link_file)
+    
 
     #soup.find('img')['src'] = DownloadFile(soup.find('img')['src'])
 

@@ -48,6 +48,16 @@ def getFileNameInDir(newdirectory, files_dict, split_path, fileExtensions, link_
         return fileSaveName
 
 
+def extractInternalCSS(Savepath, fileURL, file):
+    #find ("url") tags in the file,
+    print("Save Path:", Savepath)
+    print("fileURL:", fileURL)
+    #download all the assets starting from ../ [for now]
+
+    #download assets starting with https later.
+    #After changing the urls (if necessary i.e. other than ../ or not starting with http)
+
+    return file
 
 def DownloadFile(url,fileURL, path, files_dict, link_file):
 
@@ -105,8 +115,9 @@ def DownloadFile(url,fileURL, path, files_dict, link_file):
                 #Create a directory
                 SaveDirectory, HTMLDirectory = makeDirectory(path, fileURL);
                 
-                #It is non absolute path
+                
                 fileSaveName = getFileNameInDir(SaveDirectory, files_dict, split_path, fileExtensions)
+                #It is non absolute path
                 fileHTMLName = os.path.join(HTMLDirectory, os.path.split(fileSaveName)[-1])
 
                 #Making the File Save Directory non Absolute
@@ -121,7 +132,11 @@ def DownloadFile(url,fileURL, path, files_dict, link_file):
                 #Check if the file is already in the directory_file originalname
                 saveFile = open(fileSaveName, 'wb')
                 #saveFile = open(fileName,'wb')
+                #Extract CSS Internal Assets
+                if 'css' in file.headers['Content-Type']:
+                    extractInternalCSS(fileSaveName, fileURL, file);
                 #Write File
+
                 for line in file:
                     saveFile.write(line)
                 saveFile.close()
