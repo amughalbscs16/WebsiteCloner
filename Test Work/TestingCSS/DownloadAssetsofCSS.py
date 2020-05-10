@@ -15,11 +15,11 @@ def splitall(path):
             allparts.insert(0, parts[1])
     return allparts
 
-def extractInternalCSS(path, fileURL, file):
+def extractInternalCSS(HTMLpath, fileURL, file):
     #find ("url") tags in the file
-    newdirectory = splitall(path)
+    #newdirectorysplit = splitall(HTMLpath)
     #newdirectory = posixpath.split(newdirectory)
-    print(newdirectory)
+    #print(newdirectorysplit)
     for i in range(0,len(file)):
 	    if 'url(' in file[i]:
 	    	#find the start of url( tag)
@@ -31,10 +31,20 @@ def extractInternalCSS(path, fileURL, file):
 	    	resourceurl = file[i][start:end].replace('\'','').replace("\"","")
 	    	print(resourceurl)
 	    	#print(file[i])
-
+	    	newdirectorysplit = splitall(HTMLpath)[0:-1]
     		#download all the assets starting from ../ [for now]
+
     		if (resourceurl[0:3] == "../"):
+    			#If .. go 1 directory back
     			tmpresource = resourceurl.split("/")
+    			print(tmpresource)
+    			for i in tmpresource:
+    				if i == "..":
+    					newdirectorysplit.pop(-1)
+    				else:
+    					newdirectorysplit.append(i)
+    			
+    			print(newdirectorysplit)
     			#newdirectory =
 
     			pass
@@ -51,7 +61,13 @@ def extractInternalCSS(path, fileURL, file):
     #return file
 
 path = "E:\\UpWork\\2020\\May\\WebsiteCloner\\project\\aHR0cHM6Ly93bHZwbi5jb20=\\wp-content\\plugins\\revslider\\public\\assets\\css\\settings.css"
+
+HTMLpath = "wp-content\\plugins\\revslider\\public\\assets\\css\\settings.css"
+
 fileURL = "https://wlvpn.com/wp-content/plugins/revslider/public/assets/css/settings.css?ver=5.4.8"
+
 file = open(path, encoding='utf-8')
+
 file = file.readlines()
-extractInternalCSS(path, fileURL, file)
+
+extractInternalCSS(HTMLpath, fileURL, file)
