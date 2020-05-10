@@ -36,7 +36,8 @@ def extractInternalCSS(HTMLpath, fileURL, file):
 	    	newdirectorysplit = splitall(HTMLpath)[0:-1]
     		#download all the assets starting from ../ [for now]
     		fileURLsplit = fileURL.split("/")[0:-1]
-    		print(fileURLsplit)
+    		#print(fileURLsplit)
+    		newdirectory = ''
     		if (resourceurl[0:3] == "../"):
     			#If .. go 1 directory back
     			tmpresource = resourceurl.split("/")
@@ -49,7 +50,7 @@ def extractInternalCSS(HTMLpath, fileURL, file):
     					newdirectorysplit.append(i)
     					fileURLsplit.append(i)
     			#Prepare save Directory
-    			newdirectory = ''
+    			
     			#create a folder for writing the file if not there:
     			for i in newdirectorysplit[0:-1]:
     				newdirectory = os.path.join(newdirectory, i)
@@ -72,15 +73,32 @@ def extractInternalCSS(HTMLpath, fileURL, file):
     			saveFile.close()
 
     			#Just write in the proper directory, no need to change link in CSS for this
-    			print("FILE SAVE IN PC non absolute : ", newdirectory, "file Download URL:", fileUrlResource)
+    			#print("FILE SAVE IN PC non absolute : ", newdirectory, "file Download URL:", fileUrlResource)
     			#newdirectory =
 
     			pass
     		#download all assets with resource name starting http
     		if (resourceurl[0:4] == "http"):
-    			pass
+    			#Remove the domain part
+    			fetchURLsplit = resourceurl.split("//")[1].split('/')
+    			for k in range(0,len(fetchURLsplit)):
 
-
+    				if '.' in fetchURLsplit[k]:
+    					fetchURLsplit.pop(k)
+    					break
+    				fetchURLsplit.pop(i)
+    			print(fetchURLsplit)
+    			for k in fetchURLsplit[0:-1]:
+    				newdirectory = os.path.join(newdirectory,k)
+    				if not os.path.isdir(newdirectory):
+    					os.mkdir(newdirectory)
+    			filename = fetchURLsplit[-1].split("?")[0].split('#')[0]
+    			newdirectory = os.path.join(newdirectory,filename)
+    			print(newdirectory)
+    			#Now Edit CSS File for local
+    			file[i] = '\'' + file[i][0:start]+newdirectory+file[i][end:] + '\''
+    			print(file[i])
+    return file
 
 
     #download assets starting with https later.
