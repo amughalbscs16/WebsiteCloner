@@ -138,11 +138,11 @@ def DownloadFile(url,fileURL, path, files_dict, link_file):
                     file = saveFile.readlines()
                     saveFile.close()
                     file = extractInternalCSS(path, fileHTMLName, fileURL, file);                    
-                    saveFile = open(fileSaveName, 'w')
+                    saveFile = open(fileSaveName, 'wb')
                     for line in file:
-                        saveFile.write(line)
+                        saveFile.write(line.encode('utf-8'))
                     saveFile.close()
-                #print(files_dict)
+                print(files_dict)
                 #return fileSaveName
                 return fileHTMLName
 
@@ -152,5 +152,6 @@ def DownloadFile(url,fileURL, path, files_dict, link_file):
     except Exception as E:
         print("*****Not Available/Could Not Download*****", fileURL, E)
         print(traceback.format_exc())
+        
         return fileURL
         
