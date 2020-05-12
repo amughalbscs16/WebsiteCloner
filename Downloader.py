@@ -126,15 +126,22 @@ def DownloadFile(url,fileURL, path, files_dict, link_file):
                 #Extract CSS Internal Assets
                 
                 #Returning String file.text [str], file.content[bytes]
-                if 'css' in file.headers['Content-Type']:
-                    file = extractInternalCSS(path, fileURL, file.text);
-                else:
-                    file = file.text
+                
+
                 #Write File
 
                 for line in file:
-                    saveFile.write(bytes(line.encode('utf-8')))
+                    saveFile.write(line)
                 saveFile.close()
+                if 'css' in file.headers['Content-Type']:
+                    saveFile = open(fileSaveName, encoding='utf-8')
+                    file = saveFile.readlines()
+                    saveFile.close()
+                    file = extractInternalCSS(path, fileHTMLName, fileURL, file);                    
+                    saveFile = open(fileSaveName, 'w')
+                    for line in file:
+                        saveFile.write(line)
+                    saveFile.close()
                 #print(files_dict)
                 #return fileSaveName
                 return fileHTMLName
