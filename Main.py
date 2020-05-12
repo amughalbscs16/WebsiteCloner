@@ -44,19 +44,18 @@ def cloner(url):
         #print(images[i]['src'])
         #print(soup.findAll('link')[i]['href'])
         soup.findAll('link')[i]['href'] = DownloadFile(url,soup.findAll('link')[i]['href'],path,files_dict, link_file)
-        
-    for i in range(0,len(soup.findAll('img'))):
+    #for i in range(0,len(soup.findAll('img'))):
         #print(soup.findAll('img')[i]['src'])
-        soup.findAll('img')[i]['src'] = DownloadFile(url,soup.findAll('img')[i]['src'], path, files_dict, link_file)
+    #    soup.findAll('img')[i]['src'] = DownloadFile(url,soup.findAll('img')[i]['src'], path, files_dict, link_file)
 
-    for i in range(0,len(soup.findAll('script'))):
-        try:
+    #for i in range(0,len(soup.findAll('script'))):
+    #    try:
             #print(soup.findAll('script')[i],'\n\n')
-            if 'src' in str(soup.findAll('script')[i]): 
+    #        if 'src' in str(soup.findAll('script')[i]): 
                 #print(soup.findAll('script')[i]['src'])
-                soup.findAll('script')[i]['src'] = DownloadFile(url,soup.findAll('script')[i]['src'],path,files_dict, link_file)
-        except:
-            pass
+    #            soup.findAll('script')[i]['src'] = DownloadFile(url,soup.findAll('script')[i]['src'],path,files_dict, link_file)
+    #    except:
+    #        pass
             #print(soup.findAll('script'))
 
     

@@ -2,7 +2,8 @@ import requests, time
 import os
 from bs4 import BeautifulSoup
 import base64
-
+from DownloadAssetsofCSS import * 
+import traceback
 def makeDirectory(path, fileURL):
     fileURLNew = fileURL.split('//')[1]
     fileURLSplit = fileURLNew.split('/')
@@ -47,17 +48,6 @@ def getFileNameInDir(newdirectory, files_dict, split_path, fileExtensions, link_
             fileSaveName =  os.path.join(newdirectory,fileName)
         return fileSaveName
 
-
-def extractInternalCSS(Savepath, fileURL, file):
-    #find ("url") tags in the file,
-    print("Save Path:", Savepath)
-    print("fileURL:", fileURL)
-    #download all the assets starting from ../ [for now]
-
-    #download assets starting with https later.
-    #After changing the urls (if necessary i.e. other than ../ or not starting with http)
-
-    return file
 
 def DownloadFile(url,fileURL, path, files_dict, link_file):
 
@@ -105,6 +95,7 @@ def DownloadFile(url,fileURL, path, files_dict, link_file):
             if fileURL[0:4] == "http":
                 #Get the file 
                 file = requests.get(fileURL)
+                file = file
                 #print(file)
                 fileName = ''
                 #print(files_dict)
@@ -133,12 +124,16 @@ def DownloadFile(url,fileURL, path, files_dict, link_file):
                 saveFile = open(fileSaveName, 'wb')
                 #saveFile = open(fileName,'wb')
                 #Extract CSS Internal Assets
+                
+                #Returning String file.text [str], file.content[bytes]
                 if 'css' in file.headers['Content-Type']:
-                    extractInternalCSS(fileSaveName, fileURL, file);
+                    file = extractInternalCSS(path, fileURL, file.text);
+                else:
+                    file = file.text
                 #Write File
 
                 for line in file:
-                    saveFile.write(line)
+                    saveFile.write(bytes(line.encode('utf-8')))
                 saveFile.close()
                 #print(files_dict)
                 #return fileSaveName
@@ -149,5 +144,6 @@ def DownloadFile(url,fileURL, path, files_dict, link_file):
             return fileURL
     except Exception as E:
         print("*****Not Available/Could Not Download*****", fileURL, E)
+        print(traceback.format_exc())
         return fileURL
         
