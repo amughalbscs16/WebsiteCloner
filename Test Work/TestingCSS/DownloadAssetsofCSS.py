@@ -66,7 +66,10 @@ def extractInternalCSS(HTMLpath, fileURL, file):
     			filename = newdirectorysplit[-1].split("?")[0].split('#')[0]
     			newdirectory = os.path.join(newdirectory, filename) # Save Directory
     			#Download the resource
-    			downloadedAsset = requests.get(fileUrlResource)
+                try:
+                    downloadedAsset = requests.get(fileUrlResource)
+                catch:
+                    pass
     			saveFile = open(newdirectory, 'wb')
     			for line in downloadedAsset:
     				saveFile.write(line)
@@ -76,7 +79,7 @@ def extractInternalCSS(HTMLpath, fileURL, file):
     			#print("FILE SAVE IN PC non absolute : ", newdirectory, "file Download URL:", fileUrlResource)
     			#newdirectory =
 
-    			pass
+    			
     		#download all assets with resource name starting http
     		if (resourceurl[0:4] == "http"):
     			#Remove the domain part

@@ -40,8 +40,8 @@ def extractInternalCSS(projectpath, HTMLpath, fileURL, file):
             #download all the assets starting from ../ [for now]
             fileURLsplit = fileURL.split("/")[0:-1]
             #print(fileURLsplit)
-            newdirectory = projectpath.splitall()[-2]
-            newdirectory = os.path.join(newdirectory, projectpath.splitall()[-1])
+            newdirectory = splitall(projectpath)[-2]
+            newdirectory = os.path.join(newdirectory, splitall(projectpath)[-1])
             if (resourceurl[0:3] == "../"):
             	#If .. go 1 directory back
             	tmpresource = resourceurl.split("/")
@@ -98,6 +98,13 @@ def extractInternalCSS(projectpath, HTMLpath, fileURL, file):
             			os.mkdir(newdirectory)
             	filename = fetchURLsplit[-1].split("?")[0].split('#')[0]
             	newdirectory = os.path.join(newdirectory,filename)
+
+                downloadedAsset = requests.get(resourceurl)
+                saveFile = open(newdirectory, 'wb')
+                for line in downloadedAsset:
+                    saveFile.write(line)
+                saveFile.close()
+
             	print(newdirectory)
             	#Now Edit CSS File for local
             	file[i] =  file[i][0:start]+newdirectory+file[i][end:] 
