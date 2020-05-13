@@ -14,12 +14,22 @@ def downloadResource(path, storedirectory, downloadurl):
     except Exception as E:
         print("Download CSS Internal Issue: Failed Timeout", E)
 
+def getCssDirectory(resourceDirectorySplit):
+    cssdirectory = ''
+    #Except File Name add all folders into newdirectory inside /project/base64
+    for k in resourceDirectorySplit[0:-1]:
+        cssdirectory = os.path.join(cssdirectory,k);
+    cssdirectory = os.path.join(cssdirectory, filename)
+    return cssdirectory.replace('\\','/')
+
 def makeResourceDirectory(projectSplit, resourceDirectorySplit):
     newdirectory = os.path.join(projectSplit[-2],projectSplit[-1])
     for k in resourceDirectorySplit[0:-1]:
         newdirectory = os.path.join(newdirectory, k)
         if not os.path.isdir(newdirectory):
             os.mkdir(newdirectory)
+    filename = resourceDirectorySplit[-1].split("?")[0].split('#')[0]
+    newdirectory = os.path.join(newdirectory,filename)
     return newdirectory
 
 def splitall(path):
@@ -103,17 +113,13 @@ def extractInternalCSS(projectpath, HTMLpath, fileURL, file):
                 		fetchURLsplit.pop(k)
                 		break
                 	fetchURLsplit.pop(i)
-                print(fetchURLsplit)
-                file[i] =  file[i][0:start]+newdirectory+file[i][end:]
-
+                #print(fetchURLsplit)
                 newdirectory = makeResourceDirectory(splitProjectPath, fetchURLsplit)
-
-                filename = fetchURLsplit[-1].split("?")[0].split('#')[0]
-                newdirectory = os.path.join(newdirectory,filename)
                 downloadResource(projectpath, newdirectory, resourceurl)
-                #print(newdirectory)
-                #Now Edit CSS File for local
-                
+
+                cssdirectory = getCssDirectory(fetchURLsplit)
+
+                file[i] =  file[i][0:start]+cssdirectory+file[i][end:]
             #Since Line size can change
             lineSize = len(file[i])
             index += 1

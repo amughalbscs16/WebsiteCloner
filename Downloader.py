@@ -144,7 +144,7 @@ def DownloadFile(url,fileURL, path, files_dict, link_file):
                     saveFile.close()
                 #print(files_dict)
                 #return fileSaveName
-                return fileHTMLName
+                return fileHTMLName.replace('\\','/')
 
         else:
             #To deal with resources written has
