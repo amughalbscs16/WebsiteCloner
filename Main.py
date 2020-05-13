@@ -1,6 +1,6 @@
 from Downloader import *
 
-url = 'https://www.wlvpn.com/'
+
 
 def cloner(url):
     tmppath = os.path.join(os.getcwd(),'project')
@@ -38,7 +38,7 @@ def cloner(url):
     #print(soup.find('img')['src'])
     #images = soup.findAll('img')
     #print(images)
-
+    
     #Images are downloading
     for i in range(0,len(soup.findAll('link'))):
         #print(images[i]['src'])
@@ -66,6 +66,7 @@ def cloner(url):
     file.write(soup.encode('utf-8'))
     file.close()
 
+#url = 'https://www.wlvpn.com/'
 #cloner(url)
 
 #Other Option
