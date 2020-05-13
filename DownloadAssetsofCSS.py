@@ -14,6 +14,14 @@ def downloadResource(path, storedirectory, downloadurl):
     except Exception as E:
         print("Download CSS Internal Issue: Failed Timeout", E)
 
+def makeResourceDirectory(projectSplit, resourceDirectorySplit):
+    newdirectory = os.path.join(projectSplit[-2],projectSplit[-1])
+    for k in resourceDirectorySplit[0:-1]:
+        newdirectory = os.path.join(newdirectory, k)
+        if not os.path.isdir(newdirectory):
+            os.mkdir(newdirectory)
+    return newdirectory
+
 def splitall(path):
     allparts = []
     while 1:
@@ -73,11 +81,8 @@ def extractInternalCSS(projectpath, HTMLpath, fileURL, file):
                 #Prepare save Directory
 
                 #create a folder for writing the file if not there:
-                newdirectory = os.path.join(splitProjectPath[-2],splitProjectPath[-1])
-                for k in newdirectorysplit[0:-1]:
-                	newdirectory = os.path.join(newdirectory, k)
-                	if not os.path.isdir(newdirectory):
-                		os.mkdir(newdirectory)
+                newdirectory = makeResourceDirectory(splitProjectPath, newdirectorysplit)
+
                 #Prepare save URL
                 #print("fileURLsplit", fileURLsplit)
 
@@ -88,6 +93,7 @@ def extractInternalCSS(projectpath, HTMLpath, fileURL, file):
                 filename = newdirectorysplit[-1].split("?")[0].split('#')[0]
                 newdirectory = os.path.join(newdirectory, filename)
                 downloadResource(projectpath, newdirectory, fileUrlResource)
+
             if (resourceurl[0:4] == "http"):
             	#Remove the domain part
                 fetchURLsplit = resourceurl.split("//")[1].split('/')
@@ -98,14 +104,9 @@ def extractInternalCSS(projectpath, HTMLpath, fileURL, file):
                 		break
                 	fetchURLsplit.pop(i)
                 print(fetchURLsplit)
-                #Write in file directory without project/base64 because of localhost
                 file[i] =  file[i][0:start]+newdirectory+file[i][end:]
 
-                newdirectory = os.path.join(splitProjectPath[-2], splitProjectPath[-1])
-                for k in fetchURLsplit[0:-1]:
-                	newdirectory = os.path.join(newdirectory,k)
-                	if not os.path.isdir(newdirectory):
-                		os.mkdir(newdirectory)
+                newdirectory = makeResourceDirectory(splitProjectPath, fetchURLsplit)
 
                 filename = fetchURLsplit[-1].split("?")[0].split('#')[0]
                 newdirectory = os.path.join(newdirectory,filename)
