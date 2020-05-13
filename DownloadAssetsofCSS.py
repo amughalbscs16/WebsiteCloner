@@ -3,17 +3,16 @@ import requests
 import posixpath
 from functools import reduce 
 
-def downloadResource(storedirectory, downloadurl):
+def downloadResource(path, storedirectory, downloadurl):
     try:
-
         downloadedAsset = requests.get(downloadurl, timeout=10)
         saveFile = open(storedirectory, 'wb')
         for line in downloadedAsset:
             saveFile.write(line)
         saveFile.close()
         print("Internal Resource Downloads",downloadurl, storedirectory)
-    except:
-        print("Download CSS Internal Issue: Failed Timeout")
+    except Exception as E:
+        print("Download CSS Internal Issue: Failed Timeout", E)
 
 def splitall(path):
     allparts = []
@@ -32,6 +31,7 @@ def splitall(path):
 
 def extractInternalCSS(projectpath, HTMLpath, fileURL, file):
     #find ("url") tags in the file
+    splitProjectPath = splitall(projectpath)
     #newdirectorysplit = splitall(HTMLpath)
     #newdirectory = posixpath.split(newdirectory)
     #print(newdirectorysplit)
@@ -57,8 +57,8 @@ def extractInternalCSS(projectpath, HTMLpath, fileURL, file):
             #download all the assets starting from ../ [for now]
             fileURLsplit = fileURL.split("/")[0:-1]
             #print(fileURLsplit)
-            newdirectory = splitall(projectpath)[-2]
-            newdirectory = os.path.join(newdirectory, splitall(projectpath)[-1])
+            newdirectory = ''
+            #newdirectory = os.path.join(newdirectory, splitall(projectpath)[-1])
             if (resourceurl[0:3] == "../"):
             	#If .. go 1 directory back
                 tmpresource = resourceurl.split("/")
@@ -73,6 +73,7 @@ def extractInternalCSS(projectpath, HTMLpath, fileURL, file):
                 #Prepare save Directory
 
                 #create a folder for writing the file if not there:
+                newdirectory = os.path.join(splitProjectPath[-2],splitProjectPath[-1])
                 for k in newdirectorysplit[0:-1]:
                 	newdirectory = os.path.join(newdirectory, k)
                 	if not os.path.isdir(newdirectory):
@@ -86,7 +87,7 @@ def extractInternalCSS(projectpath, HTMLpath, fileURL, file):
 
                 filename = newdirectorysplit[-1].split("?")[0].split('#')[0]
                 newdirectory = os.path.join(newdirectory, filename)
-                downloadResource(newdirectory, fileUrlResource)
+                downloadResource(projectpath, newdirectory, fileUrlResource)
             if (resourceurl[0:4] == "http"):
             	#Remove the domain part
                 fetchURLsplit = resourceurl.split("//")[1].split('/')
@@ -97,6 +98,10 @@ def extractInternalCSS(projectpath, HTMLpath, fileURL, file):
                 		break
                 	fetchURLsplit.pop(i)
                 print(fetchURLsplit)
+                #Write in file directory without project/base64 because of localhost
+                file[i] =  file[i][0:start]+newdirectory+file[i][end:]
+
+                newdirectory = os.path.join(splitProjectPath[-2], splitProjectPath[-1])
                 for k in fetchURLsplit[0:-1]:
                 	newdirectory = os.path.join(newdirectory,k)
                 	if not os.path.isdir(newdirectory):
@@ -104,16 +109,13 @@ def extractInternalCSS(projectpath, HTMLpath, fileURL, file):
 
                 filename = fetchURLsplit[-1].split("?")[0].split('#')[0]
                 newdirectory = os.path.join(newdirectory,filename)
-                try:
-                    downloadResource(newdirectory, resourceurl)
-                except:
-                    pass
+                downloadResource(projectpath, newdirectory, resourceurl)
                 #print(newdirectory)
                 #Now Edit CSS File for local
-                file[i] =  file[i][0:start]+newdirectory+file[i][end:]
+                
             #Since Line size can change
             lineSize = len(file[i])
-            index += len(newdirectory)
+            index += 1
 
             #print(file[i])
         #file[i] = bytes(file[i])
