@@ -2,6 +2,19 @@ import os
 import requests
 import posixpath
 from functools import reduce 
+
+def downloadResource(storedirectory, downloadurl):
+    try:
+
+        downloadedAsset = requests.get(downloadurl, timeout=10)
+        saveFile = open(storedirectory, 'wb')
+        for line in downloadedAsset:
+            saveFile.write(line)
+        saveFile.close()
+        print("Internal Resource Downloads",downloadurl, storedirectory)
+    except:
+        print("Download CSS Internal Issue: Failed Timeout")
+
 def splitall(path):
     allparts = []
     while 1:
@@ -22,19 +35,23 @@ def extractInternalCSS(projectpath, HTMLpath, fileURL, file):
     #newdirectorysplit = splitall(HTMLpath)
     #newdirectory = posixpath.split(newdirectory)
     #print(newdirectorysplit)
-    print(file[0:10])
+    #print(file[0:10])
     for i in range(0,len(file)):
         #file[i] = file[i]
-        if "url(" in file[i]:
+        index = 0
+        lineSize = len(file[i])
+        while index < lineSize:
+            index = file[i].find('url(', index)
+            if index == -1:
+                break;
             #find the start of url( tag)
-            start = file[i].find('url(')+4
+            start = index+4
 	    	#end of url tag
             end = start + file[i][start:].find(')')
             #print(start,start+end)
             #extract the resource url
             resourceurl = file[i][start:end].replace('\'','').replace("\"","")
-            
-            print(resourceurl)
+            #print(resourceurl)
             #print(file[i])
             newdirectorysplit = splitall(HTMLpath)[0:-1]
             #download all the assets starting from ../ [for now]
@@ -44,71 +61,61 @@ def extractInternalCSS(projectpath, HTMLpath, fileURL, file):
             newdirectory = os.path.join(newdirectory, splitall(projectpath)[-1])
             if (resourceurl[0:3] == "../"):
             	#If .. go 1 directory back
-            	tmpresource = resourceurl.split("/")
-            	#print(tmpresource)
-            	for j in tmpresource:
-            		if j == "..":
-            			newdirectorysplit.pop(-1)
-            			fileURLsplit.pop(-1)
-            		else:
-            			newdirectorysplit.append(j)
-            			fileURLsplit.append(j)
-            	#Prepare save Directory
-            	
-            	#create a folder for writing the file if not there:
-            	for k in newdirectorysplit[0:-1]:
-            		newdirectory = os.path.join(newdirectory, k)
-            		if not os.path.isdir(newdirectory):
-            			os.mkdir(newdirectory)
-            	#Prepare save URL
-            	#print("fileURLsplit", fileURLsplit)
+                tmpresource = resourceurl.split("/")
+                #print(tmpresource)
+                for j in tmpresource:
+                	if j == "..":
+                		newdirectorysplit.pop(-1)
+                		fileURLsplit.pop(-1)
+                	else:
+                		newdirectorysplit.append(j)
+                		fileURLsplit.append(j)
+                #Prepare save Directory
 
-            	fileUrlResource = fileURLsplit[0]
-            	for k in fileURLsplit[1:]:
-            		fileUrlResource+= "/" + k
+                #create a folder for writing the file if not there:
+                for k in newdirectorysplit[0:-1]:
+                	newdirectory = os.path.join(newdirectory, k)
+                	if not os.path.isdir(newdirectory):
+                		os.mkdir(newdirectory)
+                #Prepare save URL
+                #print("fileURLsplit", fileURLsplit)
 
-            	filename = newdirectorysplit[-1].split("?")[0].split('#')[0]
-            	newdirectory = os.path.join(newdirectory, filename) # Save Directory
-            	#Download the resource
-            	downloadedAsset = requests.get(fileUrlResource)
-            	saveFile = open(newdirectory, 'wb')
-            	for line in downloadedAsset:
-            		saveFile.write(line)
-            	saveFile.close()
+                fileUrlResource = fileURLsplit[0]
+                for k in fileURLsplit[1:]:
+                	fileUrlResource+= "/" + k
 
-            	#Just write in the proper directory, no need to change link in CSS for this
-            	#print("FILE SAVE IN PC non absolute : ", newdirectory, "file Download URL:", fileUrlResource)
-            	#newdirectory =
-
-            	pass
-            #download all assets with resource name starting http
+                filename = newdirectorysplit[-1].split("?")[0].split('#')[0]
+                newdirectory = os.path.join(newdirectory, filename)
+                downloadResource(newdirectory, fileUrlResource)
             if (resourceurl[0:4] == "http"):
             	#Remove the domain part
-            	fetchURLsplit = resourceurl.split("//")[1].split('/')
-            	for k in range(0,len(fetchURLsplit)):
+                fetchURLsplit = resourceurl.split("//")[1].split('/')
+                for k in range(0,len(fetchURLsplit)):
 
-            		if '.' in fetchURLsplit[k]:
-            			fetchURLsplit.pop(k)
-            			break
-            		fetchURLsplit.pop(i)
-            	print(fetchURLsplit)
-            	for k in fetchURLsplit[0:-1]:
-            		newdirectory = os.path.join(newdirectory,k)
-            		if not os.path.isdir(newdirectory):
-            			os.mkdir(newdirectory)
-            	filename = fetchURLsplit[-1].split("?")[0].split('#')[0]
-            	newdirectory = os.path.join(newdirectory,filename)
+                	if '.' in fetchURLsplit[k]:
+                		fetchURLsplit.pop(k)
+                		break
+                	fetchURLsplit.pop(i)
+                print(fetchURLsplit)
+                for k in fetchURLsplit[0:-1]:
+                	newdirectory = os.path.join(newdirectory,k)
+                	if not os.path.isdir(newdirectory):
+                		os.mkdir(newdirectory)
 
-                downloadedAsset = requests.get(resourceurl)
-                saveFile = open(newdirectory, 'wb')
-                for line in downloadedAsset:
-                    saveFile.write(line)
-                saveFile.close()
+                filename = fetchURLsplit[-1].split("?")[0].split('#')[0]
+                newdirectory = os.path.join(newdirectory,filename)
+                try:
+                    downloadResource(newdirectory, resourceurl)
+                except:
+                    pass
+                #print(newdirectory)
+                #Now Edit CSS File for local
+                file[i] =  file[i][0:start]+newdirectory+file[i][end:]
+            #Since Line size can change
+            lineSize = len(file[i])
+            index += len(newdirectory)
 
-            	print(newdirectory)
-            	#Now Edit CSS File for local
-            	file[i] =  file[i][0:start]+newdirectory+file[i][end:] 
-            print(file[i])
+            #print(file[i])
         #file[i] = bytes(file[i])
     return file
 

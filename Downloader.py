@@ -112,14 +112,14 @@ def DownloadFile(url,fileURL, path, files_dict, link_file):
                 fileHTMLName = os.path.join(HTMLDirectory, os.path.split(fileSaveName)[-1])
 
                 #Making the File Save Directory non Absolute
-                print("File to Save directory, ", fileHTMLName)
+                ##print("File to Save directory, ", fileHTMLName)
 
                 #It is the absolute path
                 fileSaveName = os.path.join(path, fileSaveName);
-                print(fileSaveName)
+                #print(fileSaveName)
                 #Add location of new downloaded file
                 link_file[fileURL] = fileHTMLName
-                #print(fileName+"; FileName")
+                ##print(fileName+"; FileName")
                 #Check if the file is already in the directory_file originalname
                 saveFile = open(fileSaveName, 'wb')
                 #saveFile = open(fileName,'wb')
@@ -142,7 +142,7 @@ def DownloadFile(url,fileURL, path, files_dict, link_file):
                     for line in file:
                         saveFile.write(line.encode('utf-8'))
                     saveFile.close()
-                print(files_dict)
+                #print(files_dict)
                 #return fileSaveName
                 return fileHTMLName
 
@@ -152,6 +152,6 @@ def DownloadFile(url,fileURL, path, files_dict, link_file):
     except Exception as E:
         print("*****Not Available/Could Not Download*****", fileURL, E)
         print(traceback.format_exc())
-        
+
         return fileURL
         
