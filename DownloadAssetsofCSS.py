@@ -19,6 +19,7 @@ def getCssDirectory(resourceDirectorySplit):
     #Except File Name add all folders into newdirectory inside /project/base64
     for k in resourceDirectorySplit[0:-1]:
         cssdirectory = os.path.join(cssdirectory,k);
+    filename = resourceDirectorySplit[-1].split("?")[0].split('#')[0]
     cssdirectory = os.path.join(cssdirectory, filename)
     return cssdirectory.replace('\\','/')
 
@@ -101,7 +102,7 @@ def extractInternalCSS(projectpath, HTMLpath, fileURL, file):
                 	fileUrlResource+= "/" + k
 
                 filename = newdirectorysplit[-1].split("?")[0].split('#')[0]
-                newdirectory = os.path.join(newdirectory, filename)
+                newdirectory = os.path.join(newdirectory)
                 downloadResource(projectpath, newdirectory, fileUrlResource)
 
             if (resourceurl[0:4] == "http"):

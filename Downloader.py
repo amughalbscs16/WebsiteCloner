@@ -72,13 +72,19 @@ def DownloadFile(url,fileURL, path, files_dict, link_file):
             return link_file[fileURL]
         TrueFile = False
         #If file is one of the types mentioned above
-        file = requests.get(fileURL)
-        print(fileURL,file.headers['Content-Type'])
-        for x in fileExtensions:
-            if x in file.headers['Content-Type']:
-                TrueFile = True
-                break
-            
+        file = requests.get(fileURL, timeout=15)
+        #print(fileURL,file.headers['Content-Type'])
+        #if 'Content-Type' in file.headers:
+        #    for x in fileExtensions:
+        #        if x in file.headers['Content-Type']:
+        #            TrueFile = True
+        #            break
+        #Successfull Download/response starts from 2
+        if str(file).split('[')[1].split(']')[0][0] == '2':
+            TrueFile = True
+            print(fileURL, TrueFile)
+        else:
+            print(fileURL, TrueFile)
         #Deal with the directory structure
         
         print(fileURL, TrueFile)
@@ -94,8 +100,7 @@ def DownloadFile(url,fileURL, path, files_dict, link_file):
             #If File has complete URL now
             if fileURL[0:4] == "http":
                 #Get the file 
-                file = requests.get(fileURL)
-                file = file
+                #file = requests.get(fileURL)
                 #print(file)
                 fileName = ''
                 #print(files_dict)
