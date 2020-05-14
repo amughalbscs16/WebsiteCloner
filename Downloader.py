@@ -126,37 +126,35 @@ def DownloadFile(url,fileURL, path, files_dict, link_file):
                 link_file[fileURL] = fileHTMLName
                 ##print(fileName+"; FileName")
                 #Check if the file is already in the directory_file originalname
-                saveFile = open(fileSaveName, 'wb')
-                #saveFile = open(fileName,'wb')
-                #Extract CSS Internal Assets
-                
-                #Returning String file.text [str], file.content[bytes]
-                
-
-                #Write File
-
-                for line in file:
-                    saveFile.write(line)
-                saveFile.close()
-                if 'css' in file.headers['Content-Type']:
-                    saveFile = open(fileSaveName, encoding='utf-8')
-                    file = saveFile.readlines()
-                    saveFile.close()
-                    file = extractInternalCSS(path, fileHTMLName, fileURL, file);                    
-                    saveFile = open(fileSaveName, 'wb')
-                    for line in file:
-                        saveFile.write(line.encode('utf-8'))
-                    saveFile.close()
+                writeMainFile(file, fileSaveName, path, fileHTMLName, fileURL)
                 #print(files_dict)
                 #return fileSaveName
                 return fileHTMLName.replace('\\','/')
 
         else:
             #To deal with resources written has
-            return fileURL
+            return fileURL 
     except Exception as E:
         print("*****Not Available/Could Not Download*****", fileURL, E)
         print(traceback.format_exc())
 
         return fileURL
-        
+
+def writeMainFile(file, fileSaveName, path, fileHTMLName, fileURL):
+    saveFile = open(fileSaveName, 'wb')
+    #saveFile = open(fileName,'wb')
+    #Returning String file.text [str], file.content[bytes]
+    #Write File
+    for line in file:
+        saveFile.write(line)
+    saveFile.close()
+    #Extract CSS Internal Assets
+    if 'css' in file.headers['Content-Type']:
+        saveFile = open(fileSaveName, encoding='utf-8')
+        file = saveFile.readlines()
+        saveFile.close()
+        file = extractInternalCSS(path, fileHTMLName, fileURL, file);                    
+        saveFile = open(fileSaveName, 'wb')
+        for line in file:
+            saveFile.write(line.encode('utf-8'))
+        saveFile.close()
