@@ -149,7 +149,7 @@ def writeMainFile(file, fileSaveName, path, fileHTMLName, fileURL):
         saveFile.write(line)
     saveFile.close()
     #Extract CSS Internal Assets
-    if if '.css' in fileSaveName or ('Content-Type' in file.headers and 'css' in file.headers['Content-Type']):
+    if '.css' in fileSaveName or ('Content-Type' in file.headers and 'css' in file.headers['Content-Type']):
         saveFile = open(fileSaveName, encoding='utf-8')
         file = saveFile.readlines()
         saveFile.close()
