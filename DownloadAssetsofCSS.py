@@ -2,7 +2,7 @@ import os
 import requests
 import posixpath
 from functools import reduce 
-
+from fake_useragent import UserAgent
 def downloadResource(path, storedirectory, downloadurl):
     try:
         downloadedAsset = requests.get(downloadurl, timeout=10)

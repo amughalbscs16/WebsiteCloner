@@ -51,7 +51,8 @@ def getFileNameInDir(newdirectory, files_dict, split_path, fileExtensions, link_
 
 def DownloadFile(url,fileURL, path, files_dict, link_file):
 
-    
+    userAgent = UserAgent()
+    header = {'User-Agent':str(userAgent.chrome)}
     fileExtensions = ['css','js','jpeg','jpg','ico','png','img','bmp','svg','gif','javascript', 'json', 'map', 'xml']
     if fileURL == "" or fileURL == " " :
         return fileURL
@@ -72,7 +73,7 @@ def DownloadFile(url,fileURL, path, files_dict, link_file):
             return link_file[fileURL]
         TrueFile = False
         #If file is one of the types mentioned above
-        file = requests.get(fileURL, timeout=15)
+        file = requests.get(fileURL, headers=header, timeout=15)
         #print(fileURL,file.headers['Content-Type'])
         #if 'Content-Type' in file.headers:
         #    for x in fileExtensions:

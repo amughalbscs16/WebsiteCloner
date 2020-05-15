@@ -1,5 +1,4 @@
 from Downloader import *
-
 #Expects a url not ending with '/'
 def clearURL(url):
     while url[-1] == '/':
@@ -21,8 +20,10 @@ def cloner(url):
     files_dict = {}
     #For not Duplicating files already downloaded contains URLs, Location in PC
     link_file = {}
-
-    page = requests.get(url, time.sleep(2))
+    userAgent = UserAgent()
+    header = {'User-Agent':str(userAgent.chrome)}
+    page = requests.get(url, headers=header, timeout=10)
+    print(page)
     #print(page.content)
 
     #Testing File Writes

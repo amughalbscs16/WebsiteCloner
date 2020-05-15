@@ -1,0 +1,42 @@
+@font-face {
+  font-family: 'Crimson Text';
+  font-style: italic;
+  font-weight: 400;
+  src: local('Crimson Text Italic'), local('CrimsonText-Italic'), url(s/crimsontext/v10/wlpogwHKFkZgtmSR3NB0oRJfajhRK_B_3rhH.woff) format('woff');
+}
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Montserrat Regular'), local('Montserrat-Regular'), url(s/montserrat/v14/JTUSjIg1_i6t8kCHKm459WlhzSTh89Y.woff) format('woff');
+}
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 500;
+  src: local('Montserrat Medium'), local('Montserrat-Medium'), url(s/montserrat/v14/JTURjIg1_i6t8kCHKm45_ZpC3gnD-Px3rCs.woff) format('woff');
+}
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Montserrat Bold'), local('Montserrat-Bold'), url(s/montserrat/v14/JTURjIg1_i6t8kCHKm45_dJE3gnD-Px3rCs.woff) format('woff');
+}
+@font-face {
+  font-family: 'Playfair Display';
+  font-style: normal;
+  font-weight: 700;
+  src: url(s/playfairdisplay/v20/nuFvD-vYSZviVYUb_rj3ij__anPXJzDwcbmjWBN2PKeiunDXbtXK_l2q.woff) format('woff');
+}
+@font-face {
+  font-family: 'Raleway';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Raleway'), local('Raleway-Regular'), url(s/raleway/v14/1Ptug8zYS_SKggPNyC0ISYttDfA.woff) format('woff');
+}
+@font-face {
+  font-family: 'Raleway';
+  font-style: normal;
+  font-weight: 600;
+  src: local('Raleway SemiBold'), local('Raleway-SemiBold'), url(s/raleway/v14/1Ptrg8zYS_SKggPNwPIsWqZPBtqczVs.woff) format('woff');
+}
