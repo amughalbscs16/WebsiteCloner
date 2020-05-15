@@ -1,6 +1,10 @@
 from Downloader import *
 
-
+#Expects a url not ending with '/'
+def clearURL(url):
+    while url[-1] == '/':
+        url = url[0:-1]
+    return url
 
 def cloner(url):
     tmppath = os.path.join(os.getcwd(),'project')
@@ -10,6 +14,7 @@ def cloner(url):
         os.mkdir(tmppath)
     if not os.path.isdir(path):
         os.mkdir(path)
+    url = clearURL(url)
     #print(folder)
     print(path)
     #Dictionary FileName to check if new name to allot
@@ -38,8 +43,25 @@ def cloner(url):
     #print(soup.find('img')['src'])
     #images = soup.findAll('img')
     #print(images)
-    
+
     #Images are downloading
+    soup = downloadAllFiles(url, soup, path, files_dict, link_file)    
+
+    #soup.find('img')['src'] = DownloadFile(soup.find('img')['src'])
+
+    #print(soup.find('img')['src'])
+    file.write(soup.encode('utf-8'))
+    file.close()
+
+#url = 'https://www.wlvpn.com/'
+#cloner(url)
+
+#Other Option
+#Another Option
+#Request Header for each website, and check which version extension is the file
+#and download accordingly.
+
+def downloadAllFiles(url, soup, path, files_dict, link_file):
     for i in range(0,len(soup.findAll('link'))):
         #print(images[i]['src'])
         #print(soup.findAll('link')[i]['href'])
@@ -57,19 +79,4 @@ def cloner(url):
         except:
             pass
             #print(soup.findAll('script'))
-
-    
-
-    #soup.find('img')['src'] = DownloadFile(soup.find('img')['src'])
-
-    #print(soup.find('img')['src'])
-    file.write(soup.encode('utf-8'))
-    file.close()
-
-#url = 'https://www.wlvpn.com/'
-#cloner(url)
-
-#Other Option
-#Another Option
-#Request Header for each website, and check which version extension is the file
-#and download accordingly.
+    return soup

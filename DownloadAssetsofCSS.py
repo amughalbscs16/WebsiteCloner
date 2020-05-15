@@ -107,9 +107,10 @@ def extractInternalCSS(projectpath, HTMLpath, fileURL, file):
 
             if (resourceurl[0:4] == "http"):
             	#Remove the domain part
-                fetchURLsplit = resourceurl.split("//")[1].split('/')
+                resourceurl.replace("///",'/')
+                fetchURLsplit = resourceurl.split("//")[-1].split('/')
                 for k in range(0,len(fetchURLsplit)):
-
+                    #remove domain part
                 	if '.' in fetchURLsplit[k]:
                 		fetchURLsplit.pop(k)
                 		break
