@@ -79,5 +79,14 @@ def downloadAllFiles(url, soup, path, files_dict, link_file):
                 soup.findAll('script')[i]['src'] = DownloadFile(url,soup.findAll('script')[i]['src'],path,files_dict, link_file)
         except:
             pass
+    #Meta Content
+    for i in range(0,len(soup.findAll('meta'))):
+        try:
+            #print(soup.findAll('script')[i],'\n\n')
+            if 'content' in str(soup.findAll('meta')[i]): 
+                #print(soup.findAll('script')[i]['src'])
+                soup.findAll('meta')[i]['content'] = DownloadFile(url,soup.findAll('meta')[i]['content'],path,files_dict, link_file)
+        except:
+            pass
             #print(soup.findAll('script'))
     return soup
