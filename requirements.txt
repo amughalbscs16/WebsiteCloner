@@ -1,3 +1,4 @@
+fake_useragent
 flask
 flask_restful
 requests
