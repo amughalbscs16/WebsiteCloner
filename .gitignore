@@ -1,1 +1,8 @@
-/project
+#project output
+project/
+
+#pycache
+__pycache__/
+
+# macOS Files
+.DS_Store
