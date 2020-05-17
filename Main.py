@@ -63,6 +63,7 @@ def cloner(url):
 #and download accordingly.
 
 def downloadAllFiles(url, soup, path, files_dict, link_file):
+    downloadFavicon(url, path)
     for i in range(0,len(soup.findAll('link'))):
         #print(images[i]['src'])
         #print(soup.findAll('link')[i]['href'])
@@ -90,3 +91,22 @@ def downloadAllFiles(url, soup, path, files_dict, link_file):
             pass
             #print(soup.findAll('script'))
     return soup
+
+def downloadFavicon(url, path):
+    #if the url leads to a specific page
+    #website/specificpage, while favicon is at root/favicon.ico
+    try:
+        splitURL = url.split('/')
+        downURL = ''
+        #http://www.google.com/
+        #http:, '', 'www.google.com'
+        for part in splitURL[0:3]:
+            downURL = part + '/'
+        downURL += 'favicon.ico'
+        requests.get(downURL, timeout=5)
+        file = open(os.path.join(path,'favicon.ico'), 'wb')
+        for line in requests:
+            file.write(line)
+            
+    except Exception as E:
+        print("Favicon not download", E)

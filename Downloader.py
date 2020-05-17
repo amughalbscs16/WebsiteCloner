@@ -154,8 +154,9 @@ def writeMainFile(file, fileSaveName, path, fileHTMLName, fileURL):
         saveFile = open(fileSaveName, encoding='utf-8')
         file = saveFile.readlines()
         saveFile.close()
-        file = extractInternalCSS(path, fileHTMLName, fileURL, file);                    
+        file = extractExtractCSS(path, fileHTMLName, fileURL, file);                    
         saveFile = open(fileSaveName, 'wb')
         for line in file:
             saveFile.write(line.encode('utf-8'))
         saveFile.close()
+
