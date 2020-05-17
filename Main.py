@@ -97,16 +97,19 @@ def downloadFavicon(url, path):
     #website/specificpage, while favicon is at root/favicon.ico
     try:
         splitURL = url.split('/')
+        print(splitURL)
         downURL = ''
         #http://www.google.com/
         #http:, '', 'www.google.com'
         for part in splitURL[0:3]:
-            downURL = part + '/'
+            downURL += part + '/'
         downURL += 'favicon.ico'
-        requests.get(downURL, timeout=5)
-        file = open(os.path.join(path,'favicon.ico'), 'wb')
-        for line in requests:
+        downloadedAsset = requests.get(downURL, timeout=5)
+        savePath = os.path.join(path,'favicon.ico')
+        file = open(savePath, 'wb')
+        for line in downloadedAsset:
             file.write(line)
-            
+        print(downURL, savePath)
+
     except Exception as E:
         print("Favicon not download", E)

@@ -71,17 +71,30 @@ def DownloadFile(url,fileURL, path, files_dict, link_file):
         #If file is already downloaded
         if fileURL in link_file:
             return link_file[fileURL]
-        TrueFile = False
+        TrueFile = True
         #If file is one of the types mentioned above
-        file = requests.get(fileURL, headers=header, timeout=15)
+        file = ''
+        try:
+            file = requests.get(fileURL, headers=header, timeout=15)
+        #Invalid URLS etc
+        except Exception as E:
+            print(fileURL, "Not a correct file")
+            return fileURL
+        #Content-Type not in all
         #print(fileURL,file.headers['Content-Type'])
         #if 'Content-Type' in file.headers:
         #    for x in fileExtensions:
         #        if x in file.headers['Content-Type']:
         #            TrueFile = True
         #            break
-        #Successfull Download/response starts from 2
-        if str(file).split('[')[1].split(']')[0][0] == '2':
+        
+        if 'Content-Type' in file.headers:
+            print(file.headers['Content-Type'])
+            if 'html' in file.headers['Content-Type']:
+                TrueFile = False
+
+        #Successfull Download/response starts from 2xx and file is not HTML file
+        if str(file).split('[')[1].split(']')[0][0] == '2' and TrueFile:
             TrueFile = True
             print(fileURL, TrueFile)
         else:
@@ -89,11 +102,8 @@ def DownloadFile(url,fileURL, path, files_dict, link_file):
         #Deal with the directory structure
         
         print(fileURL, TrueFile)
-        if not TrueFile:
-            return fileURL
         
-        
-        if '?' not in fileURL or TrueFile :
+        if TrueFile:
             #Do Not Duplicate Files
             if fileURL in link_file:
                 return link_file[fileURL]
@@ -154,9 +164,15 @@ def writeMainFile(file, fileSaveName, path, fileHTMLName, fileURL):
         saveFile = open(fileSaveName, encoding='utf-8')
         file = saveFile.readlines()
         saveFile.close()
-        file = extractExtractCSS(path, fileHTMLName, fileURL, file);                    
+        file = extractExternalCSS(path, fileHTMLName, fileURL, file);                    
         saveFile = open(fileSaveName, 'wb')
         for line in file:
             saveFile.write(line.encode('utf-8'))
         saveFile.close()
 
+
+
+#Weaknesses/Left
+
+#We need to tackle wp-json challenge, store wp-json into a json file.
+#Now we need to deal with JS files with names ending? and have multiple files in the ?
