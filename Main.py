@@ -13,6 +13,7 @@ def cloner(url):
         os.mkdir(tmppath)
     if not os.path.isdir(path):
         os.mkdir(path)
+    #Clean the URL
     url = clearURL(url)
     #print(folder)
     print(path)
@@ -27,7 +28,8 @@ def cloner(url):
     #print(page.content)
 
     #Testing File Writes
-    file = open(os.path.join(path,'index.html'),'wb')
+    fileDir = os.path.join(path,'index.html')
+    file = open(fileDir,'wb')
     #file.write(str(page.content, 'utf-8'))
     #file.close()
 
@@ -45,14 +47,25 @@ def cloner(url):
     #images = soup.findAll('img')
     #print(images)
 
-    #Images are downloading
+    #Downloading Assets
     soup = downloadAllFiles(url, soup, path, files_dict, link_file)    
 
     #soup.find('img')['src'] = DownloadFile(soup.find('img')['src'])
 
     #print(soup.find('img')['src'])
+    
     file.write(soup.encode('utf-8'))
     file.close()
+    #Reopen the Written file as lines, and extract the internal CSS resource
+    file = open(fileDir, encoding='utf-8')
+    file = file.readlines()
+    fileURL = url+"/"+'index.html'
+    fileHTMLName = 'index.html'
+    file = extractExternalCSS(path, fileHTMLName, fileURL, file);
+    saveFile = open(fileDir, 'wb')
+    for line in file:
+        saveFile.write(line.encode('utf-8'))
+    saveFile.close()
 
 #url = 'https://www.wlvpn.com/'
 #cloner(url)

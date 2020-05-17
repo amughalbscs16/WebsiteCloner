@@ -171,7 +171,6 @@ def writeMainFile(file, fileSaveName, path, fileHTMLName, fileURL):
         saveFile.close()
 
 
-
 #Weaknesses/Left
 
 #We need to tackle wp-json challenge, store wp-json into a json file.

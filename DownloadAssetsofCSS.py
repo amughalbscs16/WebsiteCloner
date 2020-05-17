@@ -48,12 +48,13 @@ def splitall(path):
             allparts.insert(0, parts[1])
     return allparts
 
-def extractInternalCSS(projectpath, HTMLpath, fileURL, file):
-    
-
+#def extractInternalCSS(projectpath, HTMLpath, fileURL, file):
+#    pass
+#Extracts both Internal and External Css if a file is sent
 def extractExternalCSS(projectpath, HTMLpath, fileURL, file):
     #find ("url") tags in the file
     splitProjectPath = splitall(projectpath)
+    #print("CSS FILE:", projectpath, HTMLpath, fileURL)
     #newdirectorysplit = splitall(HTMLpath)
     #newdirectory = posixpath.split(newdirectory)
     #print(newdirectorysplit)
