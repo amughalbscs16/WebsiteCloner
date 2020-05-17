@@ -175,4 +175,7 @@ def writeMainFile(file, fileSaveName, path, fileHTMLName, fileURL):
 #Weaknesses/Left
 
 #We need to tackle wp-json challenge, store wp-json into a json file.
-#Now we need to deal with JS files with names ending? and have multiple files in the ?
+
+#**Now we need to deal with JS files with names ending? and have multiple files in the ?
+#After Index.html file is written, send it to a extract function, read the whole file, read the url() tags and extract
+#and rewrite the file.

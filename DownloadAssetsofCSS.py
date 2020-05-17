@@ -48,6 +48,9 @@ def splitall(path):
             allparts.insert(0, parts[1])
     return allparts
 
+def extractInternalCSS(projectpath, HTMLpath, fileURL, file):
+    
+
 def extractExternalCSS(projectpath, HTMLpath, fileURL, file):
     #find ("url") tags in the file
     splitProjectPath = splitall(projectpath)

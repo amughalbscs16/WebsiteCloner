@@ -105,11 +105,12 @@ def downloadFavicon(url, path):
             downURL += part + '/'
         downURL += 'favicon.ico'
         downloadedAsset = requests.get(downURL, timeout=5)
-        savePath = os.path.join(path,'favicon.ico')
-        file = open(savePath, 'wb')
-        for line in downloadedAsset:
-            file.write(line)
-        print(downURL, savePath)
+        if str(downloadedAsset).split('[')[1].split(']')[0][0] == '2':
+            savePath = os.path.join(path,'favicon.ico')
+            file = open(savePath, 'wb')
+            for line in downloadedAsset:
+                file.write(line)
+            print(downURL, savePath)
 
     except Exception as E:
         print("Favicon not download", E)
