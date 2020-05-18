@@ -6,6 +6,8 @@ from fake_useragent import UserAgent
 def downloadResource(path, storedirectory, downloadurl):
     try:
         downloadedAsset = requests.get(downloadurl, timeout=10)
+        #Print the Response value to see if it does work.
+        print("DownloadURL", downloadedAsset)
         saveFile = open(storedirectory, 'wb')
         for line in downloadedAsset:
             saveFile.write(line)

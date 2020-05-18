@@ -22,7 +22,8 @@ def cloner(url):
     #For not Duplicating files already downloaded contains URLs, Location in PC
     link_file = {}
     userAgent = UserAgent()
-    header = {'User-Agent':str(userAgent.chrome)}
+    #header = {'User-Agent':str(userAgent.chrome)}
+    header = {'User-Agent':"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/601.3.9 (KHTML, like Gecko) Version/9.0.2 Safari/601.3.9"}
     page = requests.get(url, headers=header, timeout=10)
     print(page)
     #print(page.content)
