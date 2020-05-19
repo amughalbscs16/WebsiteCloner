@@ -3,16 +3,27 @@ import requests
 import posixpath
 from functools import reduce 
 from fake_useragent import UserAgent
+import urllib3
+
 def downloadResource(path, storedirectory, downloadurl):
     try:
         downloadedAsset = requests.get(downloadurl, timeout=10)
-        #Print the Response value to see if it does work.
-        print("DownloadURL", downloadedAsset)
+        http = urllib3.PoolManager()
         saveFile = open(storedirectory, 'wb')
-        for line in downloadedAsset:
-            saveFile.write(line)
-        saveFile.close()
-        print("Internal Resource Downloads",downloadurl, storedirectory)
+        response = str(downloadedAsset)
+        if str(downloadedAsset).split('[')[1].split(']')[0][0] == '2':
+            print("DownloadURL", downloadedAsset, "REQUESTS")
+            for line in downloadedAsset:
+                saveFile.write(line)
+            saveFile.close()
+        else:
+            downloadedAsset = http.request('GET', downloadurl)
+            print("DownloadURL", downloadedAsset.status, "URLLIB3")
+            saveFile.write(downloadedAsset.data)
+            saveFile.close()
+            response = downloadedAsset.status
+        #Print the Response value to see if it does work.
+        print("Internal Resource Downloads",downloadurl, storedirectory, )
     except Exception as E:
         print("Download CSS Internal Issue: Failed Timeout", E)
 
