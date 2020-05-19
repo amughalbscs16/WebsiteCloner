@@ -5,10 +5,14 @@ from functools import reduce
 from fake_useragent import UserAgent
 import urllib3
 
+def getFilefromURLLIB(url):
+    http = urllib3.PoolManager()
+    file = http.request('GET', url)
+    return file
+
 def downloadResource(path, storedirectory, downloadurl):
     try:
         downloadedAsset = requests.get(downloadurl, timeout=10)
-        http = urllib3.PoolManager()
         saveFile = open(storedirectory, 'wb')
         response = str(downloadedAsset)
         if str(downloadedAsset).split('[')[1].split(']')[0][0] == '2':
@@ -17,7 +21,7 @@ def downloadResource(path, storedirectory, downloadurl):
                 saveFile.write(line)
             saveFile.close()
         else:
-            downloadedAsset = http.request('GET', downloadurl)
+            downloadedAsset = getFilefromURLLIB(downloadurl)
             print("DownloadURL", downloadedAsset.status, "URLLIB3")
             saveFile.write(downloadedAsset.data)
             saveFile.close()

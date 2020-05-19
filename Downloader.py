@@ -48,10 +48,10 @@ def getFileNameInDir(newdirectory, files_dict, split_path, fileExtensions, link_
             fileSaveName =  os.path.join(newdirectory,fileName)
         return fileSaveName
 
-
 def DownloadFile(url,fileURL, path, files_dict, link_file):
 
     userAgent = UserAgent()
+    RoUL = ''
     #header = {'User-Agent':str(userAgent.chrome)}
     header = {'User-Agent':"Mozilla/5.0 (X11; U; Linux i686) Gecko/20071127 Firefox/2.0.0.11"}
     fileExtensions = ['css','js','jpeg','jpg','ico','png','img','bmp','svg','gif','javascript', 'json', 'map', 'xml']
@@ -75,8 +75,27 @@ def DownloadFile(url,fileURL, path, files_dict, link_file):
         TrueFile = True
         #If file is one of the types mentioned above
         file = ''
+        response = ''
         try:
             file = requests.get(fileURL, headers=header, timeout=15)
+            response = str(file).split('[')[1].split(']')[0][0]
+            print("Requests Lib Response:", file)
+            RoUL = 'R'
+            if response != '2':
+                file = getFileFromURLLIB(fileURL)
+                print("URL Lib Response:", file.status)
+                response = str(file.status)[0]
+                if response == '2':
+                    RoUL = 'UL'
+                else:
+                    print("Response not 2xx from both Requests and URLLIB")
+                    return fileURL
+
+            if 'Content-Type' in file.headers:
+                print(file.headers['Content-Type'])
+                if 'html' in file.headers['Content-Type']:
+                    TrueFile = False
+
         #Invalid URLS etc
         except Exception as E:
             print(fileURL, "Not a correct file")
@@ -89,15 +108,11 @@ def DownloadFile(url,fileURL, path, files_dict, link_file):
         #            TrueFile = True
         #            break
         
-        if 'Content-Type' in file.headers:
-            print(file.headers['Content-Type'])
-            if 'html' in file.headers['Content-Type']:
-                TrueFile = False
 
         #Successfull Download/response starts from 2xx and file is not HTML file
-        if str(file).split('[')[1].split(']')[0][0] == '2' and TrueFile:
+        if response == '2' and TrueFile:
             TrueFile = True
-            print(fileURL, TrueFile)
+            print(fileURL, TrueFile, "R/UL", RoUL)
         else:
             print(fileURL, TrueFile)
         #Deal with the directory structure
@@ -138,7 +153,7 @@ def DownloadFile(url,fileURL, path, files_dict, link_file):
                 link_file[fileURL] = fileHTMLName
                 ##print(fileName+"; FileName")
                 #Check if the file is already in the directory_file originalname
-                writeMainFile(file, fileSaveName, path, fileHTMLName, fileURL)
+                writeMainFile(file, fileSaveName, path, fileHTMLName, fileURL, RoUL)
                 #print(files_dict)
                 #return fileSaveName
                 return fileHTMLName.replace('\\','/')
@@ -152,16 +167,20 @@ def DownloadFile(url,fileURL, path, files_dict, link_file):
 
         return fileURL
 
-def writeMainFile(file, fileSaveName, path, fileHTMLName, fileURL):
+def writeMainFile(file, fileSaveName, path, fileHTMLName, fileURL, RoUL):
     saveFile = open(fileSaveName, 'wb')
+    RoUL
     #saveFile = open(fileName,'wb')
     #Returning String file.text [str], file.content[bytes]
     #Write File
-    for line in file:
-        saveFile.write(line)
+    if RoUL == 'UL':
+        saveFile.write(file.data)
+    elif RoUL == 'R':    
+        for line in file:
+            saveFile.write(line)
     saveFile.close()
     #Extract CSS Internal Assets
-    if '.css' in fileSaveName or ('Content-Type' in file.headers and 'css' in file.headers['Content-Type']):
+    if '.css' in fileSaveName or ('content-type' in file.headers and 'css' in file.headers['content-type']):
         saveFile = open(fileSaveName, encoding='utf-8')
         file = saveFile.readlines()
         saveFile.close()
@@ -170,6 +189,7 @@ def writeMainFile(file, fileSaveName, path, fileHTMLName, fileURL):
         for line in file:
             saveFile.write(line.encode('utf-8'))
         saveFile.close()
+
 
 
 #Weaknesses/Left
