@@ -118,13 +118,15 @@ def downloadFavicon(url, path):
         for part in splitURL[0:3]:
             downURL += part + '/'
         downURL += 'favicon.ico'
-        downloadedAsset = requests.get(downURL, timeout=5)
-        if str(downloadedAsset).split('[')[1].split(']')[0][0] == '2':
-            savePath = os.path.join(path,'favicon.ico')
-            file = open(savePath, 'wb')
-            for line in downloadedAsset:
-                file.write(line)
-            print(downURL, savePath)
+        savePath = os.path.join(path,'favicon.ico')
+        downloadResource("", savePath, downURL)
+        #downloadedAsset = requests.get(downURL, timeout=5)
+        #print("Favicon,", savePath, downloadedAsset)
+        #if str(downloadedAsset).split('[')[1].split(']')[0][0] == '2':
+        #    file = open(savePath, 'wb')
+        #    for line in downloadedAsset:
+        #        file.write(line)
+        #    print(downURL, savePath)
 
     except Exception as E:
         print("Favicon not download", E)
