@@ -99,8 +99,27 @@ def extractExternalCSS(projectpath, HTMLpath, fileURL, file):
             #print(fileURLsplit)
             newdirectory = ''
             #newdirectory = os.path.join(newdirectory, splitall(projectpath)[-1])
-            if (resourceurl[0:3] == "../"):
+            if (resourceurl[0:4] == "http"):
+                #Remove the domain part
+                resourceurl.replace("///",'/')
+                fetchURLsplit = resourceurl.split("//")[-1].split('/')
+                for k in range(0,len(fetchURLsplit)):
+                    #remove domain part
+                    if '.' in fetchURLsplit[k]:
+                        fetchURLsplit.pop(k)
+                        break
+                    fetchURLsplit.pop(i)
+                #print(fetchURLsplit)
+                newdirectory = makeResourceDirectory(splitProjectPath, fetchURLsplit)
+                downloadResource(projectpath, newdirectory, resourceurl)
+
+                cssdirectory = getCssDirectory(fetchURLsplit)
+
+                file[i] =  file[i][0:start]+cssdirectory+file[i][end:]
+
+            elif (resourceurl[0:3] == "../" or resourceurl[0].isalpha()):
             	#If .. go 1 directory back
+                #folder/file.html
                 tmpresource = resourceurl.split("/")
                 #print(tmpresource)
                 for j in tmpresource:
@@ -125,24 +144,7 @@ def extractExternalCSS(projectpath, HTMLpath, fileURL, file):
                 filename = newdirectorysplit[-1].split("?")[0].split('#')[0]
                 newdirectory = os.path.join(newdirectory)
                 downloadResource(projectpath, newdirectory, fileUrlResource)
-
-            if (resourceurl[0:4] == "http"):
-            	#Remove the domain part
-                resourceurl.replace("///",'/')
-                fetchURLsplit = resourceurl.split("//")[-1].split('/')
-                for k in range(0,len(fetchURLsplit)):
-                    #remove domain part
-                	if '.' in fetchURLsplit[k]:
-                		fetchURLsplit.pop(k)
-                		break
-                	fetchURLsplit.pop(i)
-                #print(fetchURLsplit)
-                newdirectory = makeResourceDirectory(splitProjectPath, fetchURLsplit)
-                downloadResource(projectpath, newdirectory, resourceurl)
-
-                cssdirectory = getCssDirectory(fetchURLsplit)
-
-                file[i] =  file[i][0:start]+cssdirectory+file[i][end:]
+            
             #Since Line size can change
             lineSize = len(file[i])
             index += 1
