@@ -43,9 +43,12 @@ def getCssDirectory(resourceDirectorySplit):
 def makeResourceDirectory(projectSplit, resourceDirectorySplit):
     newdirectory = os.path.join(projectSplit[-2],projectSplit[-1])
     for k in resourceDirectorySplit[0:-1]:
-        newdirectory = os.path.join(newdirectory, k)
+        tmpnewdirectory = os.path.join(newdirectory, k)
         if not os.path.isdir(newdirectory):
-            os.mkdir(newdirectory)
+            try:
+                os.mkdir(newdirectory)
+            except NotADirectoryError as E:
+                newdirectory = tmpnewdirectory
     filename = resourceDirectorySplit[-1].split("?")[0].split('#')[0]
     newdirectory = os.path.join(newdirectory,filename)
     return newdirectory
@@ -123,12 +126,15 @@ def extractExternalCSS(projectpath, HTMLpath, fileURL, file):
                 tmpresource = resourceurl.split("/")
                 #print(tmpresource)
                 for j in tmpresource:
+                    #try:
                 	if j == "..":
                 		newdirectorysplit.pop(-1)
                 		fileURLsplit.pop(-1)
                 	else:
                 		newdirectorysplit.append(j)
                 		fileURLsplit.append(j)
+                    #except:
+                    #    pass
                 #Prepare save Directory
 
                 #create a folder for writing the file if not there:

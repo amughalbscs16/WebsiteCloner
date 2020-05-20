@@ -11,10 +11,15 @@ def makeDirectory(path, fileURL):
     HTMLdirectory = ""
     if (len(fileURLSplit)>2):
         for folder in fileURLSplit[1:len(fileURLSplit)-1]:
-            SaveDirectory = os.path.join(SaveDirectory, folder);
-            if not os.path.isdir(SaveDirectory):
-                os.mkdir(SaveDirectory)
-            HTMLdirectory = os.path.join(HTMLdirectory, folder);
+            tmpSaveDirectory = os.path.join(SaveDirectory, folder);
+            if not os.path.isdir(tmpSaveDirectory):
+                try:
+                    os.mkdir(tmpSaveDirectory)
+                    SaveDirectory = tmpSaveDirectory
+                    HTMLdirectory = os.path.join(HTMLdirectory, folder);
+                except NotADirectoryError as E:
+                    continue
+            
     
     return SaveDirectory, HTMLdirectory
 
@@ -86,11 +91,11 @@ def DownloadFile(url,fileURL, path, files_dict, link_file):
             response = str(file).split('[')[1].split(']')[0][0]
             print("Requests Lib Response:", file)
             RoUL = 'R'
-            if response != '2':
-                file = getFileFromURLLIB(fileURL)
+            if response != '2' and response != '3':
+                file = getFilefromURLLIB(fileURL)
                 print("URL Lib Response:", file.status)
                 response = str(file.status)[0]
-                if response == '2':
+                if response == '2' and respons == '3':
                     RoUL = 'UL'
                 else:
                     print("Response not 2xx from both Requests and URLLIB")
@@ -103,7 +108,7 @@ def DownloadFile(url,fileURL, path, files_dict, link_file):
 
         #Invalid URLS etc
         except Exception as E:
-            print(fileURL, "Not a correct file")
+            print(fileURL, "Not a correct file", E)
             return fileURL
         #Content-Type not in all
         #print(fileURL,file.headers['Content-Type'])
@@ -172,6 +177,8 @@ def DownloadFile(url,fileURL, path, files_dict, link_file):
 
         return fileURL
 def cleanFileSaveName(file, fileName):
+    if fileName == '':
+        return fileName
     fileName = fileName.replace("\\", '/')
     fileName = fileName.replace("///",'/').replace('//','/')
     while fileName[-1] == '/':
@@ -179,6 +186,9 @@ def cleanFileSaveName(file, fileName):
     if '.' not in fileName:
         if 'content-type' in file.headers: 
             fileName += "." + file.headers['content-type'].split(';')[0].split('/')[1]
+        else:
+            print("This File Has No Content-Type", file.headers, fileName)
+
     return fileName
 
 def writeMainFile(file, fileSaveName, path, fileHTMLName, fileURL, RoUL):
