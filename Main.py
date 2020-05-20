@@ -24,7 +24,7 @@ def cloner(url):
     userAgent = UserAgent()
     #header = {'User-Agent':str(userAgent.chrome)}
     header = {'User-Agent':"Mozilla/5.0 (X11; U; Linux i686) Gecko/20071127 Firefox/2.0.0.11"}
-    page = requests.get(url, headers=header, timeout=10)
+    page = requests.get(url, headers=header, timeout=30)
     print(page)
     #print(page.content)
 

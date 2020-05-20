@@ -67,6 +67,11 @@ def DownloadFile(url,fileURL, path, files_dict, link_file):
         fileURL = "http:"+fileURL
     
     try:
+        #folder internal
+        if fileURL[0:4] != 'http':
+            if fileURL[0].isalpha():
+                fileURL = url + "/" + fileURL
+        #To See how does '/' only behaves
         if fileURL[0] == "/":
             fileURL = url + fileURL
         #If file is already downloaded
@@ -77,7 +82,7 @@ def DownloadFile(url,fileURL, path, files_dict, link_file):
         file = ''
         response = ''
         try:
-            file = requests.get(fileURL, headers=header, timeout=15)
+            file = requests.get(fileURL, headers=header, timeout=30)
             response = str(file).split('[')[1].split(']')[0][0]
             print("Requests Lib Response:", file)
             RoUL = 'R'
@@ -153,7 +158,7 @@ def DownloadFile(url,fileURL, path, files_dict, link_file):
                 link_file[fileURL] = fileHTMLName
                 ##print(fileName+"; FileName")
                 #Check if the file is already in the directory_file originalname
-                writeMainFile(file, fileSaveName, path, fileHTMLName, fileURL, RoUL)
+                fileHTMLName = writeMainFile(file, fileSaveName, path, fileHTMLName, fileURL, RoUL)
                 #print(files_dict)
                 #return fileSaveName
                 return fileHTMLName.replace('\\','/')
@@ -166,10 +171,23 @@ def DownloadFile(url,fileURL, path, files_dict, link_file):
         print(traceback.format_exc())
 
         return fileURL
+def cleanFileSaveName(file, fileName):
+    fileName = fileName.replace("\\", '/')
+    fileName = fileName.replace("///",'/').replace('//','/')
+    while fileName[-1] == '/':
+        fileName = fileName[0:-1]
+    if '.' not in fileName:
+        if 'content-type' in file.headers: 
+            fileName += "." + file.headers['content-type'].split(';')[0].split('/')[1]
+    return fileName
 
 def writeMainFile(file, fileSaveName, path, fileHTMLName, fileURL, RoUL):
+    saveFile = None
+    fileSaveName = cleanFileSaveName(file, fileSaveName)
+    fileHTMLName = cleanFileSaveName(file, fileHTMLName)
     saveFile = open(fileSaveName, 'wb')
-    RoUL
+    
+
     #saveFile = open(fileName,'wb')
     #Returning String file.text [str], file.content[bytes]
     #Write File
@@ -189,6 +207,7 @@ def writeMainFile(file, fileSaveName, path, fileHTMLName, fileURL, RoUL):
         for line in file:
             saveFile.write(line.encode('utf-8'))
         saveFile.close()
+    return fileHTMLName
 
 
 
@@ -197,5 +216,4 @@ def writeMainFile(file, fileSaveName, path, fileHTMLName, fileURL, RoUL):
 #We need to tackle wp-json challenge, store wp-json into a json file.
 
 #**Now we need to deal with JS files with names ending? and have multiple files in the ?
-#After Index.html file is written, send it to a extract function, read the whole file, read the url() tags and extract
-#and rewrite the file.
+#If file directory could not be made, make a directory and store extras there.
