@@ -192,9 +192,9 @@ def cleanFileSaveName(file, fileName):
     return fileName
 
 def writeMainFile(file, fileSaveName, path, fileHTMLName, fileURL, RoUL):
-    saveFile = None
-    fileSaveName = cleanFileSaveName(file, fileSaveName)
-    fileHTMLName = cleanFileSaveName(file, fileHTMLName)
+    #saveFile = None
+    #fileSaveName = cleanFileSaveName(file, fileSaveName)
+    #fileHTMLName = cleanFileSaveName(file, fileHTMLName)
     saveFile = open(fileSaveName, 'wb')
     
 

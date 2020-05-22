@@ -19,7 +19,7 @@ def downloadResource(path, storedirectory, downloadurl):
             print("DownloadURL", downloadedAsset, "REQUESTS")
             for line in downloadedAsset:
                 saveFile.write(line)
-            saveFile.close()
+                saveFile.close()
         else:
             downloadedAsset = getFilefromURLLIB(downloadurl)
             print("DownloadURL", downloadedAsset.status, "URLLIB3")
@@ -36,21 +36,25 @@ def getCssDirectory(resourceDirectorySplit):
     #Except File Name add all folders into newdirectory inside /project/base64
     for k in resourceDirectorySplit[0:-1]:
         cssdirectory = os.path.join(cssdirectory,k);
-    filename = resourceDirectorySplit[-1].split("?")[0].split('#')[0]
-    cssdirectory = os.path.join(cssdirectory, filename)
+        filename = resourceDirectorySplit[-1].split("?")[0].split('#')[0]
+        cssdirectory = os.path.join(cssdirectory, filename)
     return cssdirectory.replace('\\','/')
 
 def makeResourceDirectory(projectSplit, resourceDirectorySplit):
+    illegalchars = ['/','\\','<','>',':','\"','|', '?', '*']
     newdirectory = os.path.join(projectSplit[-2],projectSplit[-1])
+
     for k in resourceDirectorySplit[0:-1]:
-        tmpnewdirectory = os.path.join(newdirectory, k)
-        if not os.path.isdir(newdirectory):
-            try:
-                os.mkdir(newdirectory)
-            except NotADirectoryError as E:
-                newdirectory = tmpnewdirectory
-    filename = resourceDirectorySplit[-1].split("?")[0].split('#')[0]
-    newdirectory = os.path.join(newdirectory,filename)
+        for illChar in illegalchars:
+            k = k.replace(illChar, '')
+    tmpnewdirectory = os.path.join(newdirectory, k)
+    if not os.path.isdir(newdirectory):
+        try:
+            os.mkdir(newdirectory)
+        except NotADirectoryError as E:
+            newdirectory = tmpnewdirectory
+            filename = resourceDirectorySplit[-1].split("?")[0].split('#')[0]
+            newdirectory = os.path.join(newdirectory,filename)
     return newdirectory
 
 def splitall(path):
@@ -89,13 +93,14 @@ def extractExternalCSS(projectpath, HTMLpath, fileURL, file):
                 break;
             #find the start of url( tag)
             start = index+4
-	    	#end of url tag
+            #end of url tag
             end = start + file[i][start:].find(')')
             #print(start,start+end)
             #extract the resource url
             resourceurl = file[i][start:end].replace('\'','').replace("\"","")
             #print(resourceurl)
             #print(file[i])
+            print("HTMLPATH", HTMLpath)
             newdirectorysplit = splitall(HTMLpath)[0:-1]
             #download all the assets starting from ../ [for now]
             fileURLsplit = fileURL.split("/")[0:-1]
@@ -121,21 +126,19 @@ def extractExternalCSS(projectpath, HTMLpath, fileURL, file):
                 file[i] =  file[i][0:start]+cssdirectory+file[i][end:]
 
             elif (resourceurl[0:3] == "../" or resourceurl[0].isalpha()):
-            	#If .. go 1 directory back
+                #If .. go 1 directory back
                 #folder/file.html
                 tmpresource = resourceurl.split("/")
                 #print(tmpresource)
                 for j in tmpresource:
-                    #try:
-                	if j == "..":
-                		newdirectorysplit.pop(-1)
-                		fileURLsplit.pop(-1)
-                	else:
-                		newdirectorysplit.append(j)
-                		fileURLsplit.append(j)
-                    #except:
-                    #    pass
-                #Prepare save Directory
+                    if j == "..":
+                        print(newdirectorysplit, fileURLsplit, len(newdirectorysplit), len(fileURLsplit))
+                        newdirectorysplit.pop(-1)
+                        fileURLsplit.pop(-1)
+                    else:
+                        newdirectorysplit.append(j)
+                        fileURLsplit.append(j)
+                    #Prepare save Directory
 
                 #create a folder for writing the file if not there:
                 newdirectory = makeResourceDirectory(splitProjectPath, newdirectorysplit)
@@ -145,25 +148,25 @@ def extractExternalCSS(projectpath, HTMLpath, fileURL, file):
 
                 fileUrlResource = fileURLsplit[0]
                 for k in fileURLsplit[1:]:
-                	fileUrlResource+= "/" + k
+                    fileUrlResource+= "/" + k
 
                 filename = newdirectorysplit[-1].split("?")[0].split('#')[0]
                 newdirectory = os.path.join(newdirectory)
                 downloadResource(projectpath, newdirectory, fileUrlResource)
-            
+
             #Since Line size can change
             lineSize = len(file[i])
             index += 1
 
-            #print(file[i])
-        #file[i] = bytes(file[i])
+    #print(file[i])
+    #file[i] = bytes(file[i])
     return file
 
 
-    #download assets starting with https later.
-    #After changing the urls (if necessary i.e. other than ../ or not starting with http)
+#download assets starting with https later.
+#After changing the urls (if necessary i.e. other than ../ or not starting with http)
 
-    #return file
+#return file
 
 #path = "E:\\UpWork\\2020\\May\\WebsiteCloner\\project\\aHR0cHM6Ly93bHZwbi5jb20=\\wp-content\\plugins\\revslider\\public\\assets\\css\\settings.css"
 #projectpath = "E:\\UpWork\\2020\\May\\WebsiteCloner\\project\\aHR0cHM6Ly93bHZwbi5jb20="
