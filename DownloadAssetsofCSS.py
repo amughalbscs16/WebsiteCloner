@@ -128,6 +128,7 @@ def extractExternalCSS(projectpath, HTMLpath, fileURL, file):
                 #print(tmpresource)
                 for j in tmpresource:
                     if j == "..":
+                        print(newdirectorysplit, fileURLsplit, len(newdirectorysplit), len(fileURLsplit))
                         newdirectorysplit.pop(-1)
                         fileURLsplit.pop(-1)
                     else:

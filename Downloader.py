@@ -5,8 +5,12 @@ import base64
 from DownloadAssetsofCSS import * 
 import traceback
 def makeDirectory(path, fileURL):
-    fileURLNew = fileURL.split('//')[1]
-    fileURLSplit = fileURLNew.split('/')
+    fileURLNew = fileURL    
+    if '//' in fileURL:
+        fileURLNew = fileURL.split('//')[1]
+    
+    print(fileURLNew, "First Split in MainDirectory for fileURL", "FileURL:", fileURL)
+    fileURLSplit = splitall(fileURLNew)
     SaveDirectory = path
     HTMLdirectory = ""
     if (len(fileURLSplit)>2):
@@ -16,10 +20,11 @@ def makeDirectory(path, fileURL):
                 try:
                     os.mkdir(tmpSaveDirectory)
                     SaveDirectory = tmpSaveDirectory
-                    HTMLdirectory = os.path.join(HTMLdirectory, folder);
                 except NotADirectoryError as E:
                     continue
-            
+            SaveDirectory = tmpSaveDirectory
+            HTMLdirectory = os.path.join(HTMLdirectory, folder);
+                
     
     return SaveDirectory, HTMLdirectory
 
@@ -151,6 +156,7 @@ def DownloadFile(url,fileURL, path, files_dict, link_file):
                 
                 fileSaveName = getFileNameInDir(SaveDirectory, files_dict, split_path, fileExtensions)
                 #It is non absolute path
+
                 fileHTMLName = os.path.join(HTMLDirectory, os.path.split(fileSaveName)[-1])
 
                 #Making the File Save Directory non Absolute
@@ -212,6 +218,7 @@ def writeMainFile(file, fileSaveName, path, fileHTMLName, fileURL, RoUL):
         saveFile = open(fileSaveName, encoding='utf-8')
         file = saveFile.readlines()
         saveFile.close()
+        print("FilEHTML NAME later for split:", fileHTMLName)
         file = extractExternalCSS(path, fileHTMLName, fileURL, file);                    
         saveFile = open(fileSaveName, 'wb')
         for line in file:
