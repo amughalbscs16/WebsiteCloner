@@ -1,4 +1,5 @@
 from Downloader import *
+from chromeDriver import driver as browser
 #Expects a url not ending with '/'
 def clearURL(url):
     while url[-1] == '/':
@@ -6,6 +7,8 @@ def clearURL(url):
     return url
 
 def cloner(url):
+
+
     tmppath = os.path.join(os.getcwd(),'project')
     folder = str(base64.b64encode(bytes(url,'utf-8')),'utf-8')
     path = os.path.join(tmppath, folder)
@@ -24,8 +27,15 @@ def cloner(url):
     userAgent = UserAgent()
     #header = {'User-Agent':str(userAgent.chrome)}
     header = {'User-Agent':"Mozilla/5.0 (X11; U; Linux i686) Gecko/20071127 Firefox/2.0.0.11"}
-    page = requests.get(url, headers=header, timeout=30)
-    print(page)
+    #page = requests.get(url, headers=header, timeout=(20,10))
+    #page = getFilefromURLLIB(url)
+    #page = page.content
+    #page = page.data
+    browser.get(url)
+    time.sleep(5)
+    page = browser.page_source
+    #print(page)
+    #print(page)
     #print(page.content)
 
     #Testing File Writes
@@ -34,7 +44,7 @@ def cloner(url):
     #file.write(str(page.content, 'utf-8'))
     #file.close()
 
-    soup = BeautifulSoup(page.content, 'html.parser')
+    soup = BeautifulSoup(page, 'html.parser')
 
     #Then for <img> tags
     #Then Parse the object first for <script> tags,
