@@ -60,7 +60,7 @@ def cloner(url):
     #print(images)
 
     #Downloading Assets
-#    soup = downloadAllFiles(url, soup, path, files_dict, link_file)    
+    soup = downloadAllFiles(url, soup, path, files_dict, link_file)    
 
     #soup.find('img')['src'] = DownloadFile(soup.find('img')['src'])
 
