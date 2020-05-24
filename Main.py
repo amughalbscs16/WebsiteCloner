@@ -68,10 +68,12 @@ def cloner(url):
     file.write(soup.encode('utf-8'))
     file.close()
     #Reopen the Written file as lines, and extract the internal CSS resource
-    file = open(fileDir, encoding='utf-8')
-    file = file.readlines()
+    fileread = open(fileDir, encoding='utf-8')
+    file = fileread.readlines()
+    fileread.close()
     fileURL = url+"/"+'index.html'
     fileHTMLName = 'index.html'
+    print("Now downloading CSS in body of HTML file")
     file = extractExternalCSS(path, fileHTMLName, fileURL, file);
     saveFile = open(fileDir, 'wb')
     for line in file:
