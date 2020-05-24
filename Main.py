@@ -1,5 +1,6 @@
 from Downloader import *
 from chromeDriver import driver as browser
+
 #Expects a url not ending with '/'
 def clearURL(url):
     while url[-1] == '/':
@@ -59,7 +60,7 @@ def cloner(url):
     #print(images)
 
     #Downloading Assets
-    soup = downloadAllFiles(url, soup, path, files_dict, link_file)    
+#    soup = downloadAllFiles(url, soup, path, files_dict, link_file)    
 
     #soup.find('img')['src'] = DownloadFile(soup.find('img')['src'])
 

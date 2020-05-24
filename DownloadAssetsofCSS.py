@@ -86,15 +86,21 @@ def extractExternalCSS(projectpath, HTMLpath, fileURL, file):
         lineSize = len(file[i])
         while index < lineSize:
             index = file[i].find('url(', index)
+
             if index == -1:
                 break;
             #find the start of url( tag)
             start = index+4
             #end of url tag
             end = start + file[i][start:].find(')')
+            
             #print(start,start+end)
             #extract the resource url
             resourceurl = file[i][start:end].replace('\'','').replace("\"","")
+            if end-start == 0:
+                index += 1
+                continue
+            print(resourceurl)
             #print(resourceurl)
             #print(file[i])
             newdirectorysplit = splitall(HTMLpath)[0:-1]
@@ -102,6 +108,10 @@ def extractExternalCSS(projectpath, HTMLpath, fileURL, file):
             fileURLsplit = fileURL.split("/")[0:-1]
             #print(fileURLsplit)
             newdirectory = ''
+            if (resourceurl[0:4] == "data"):
+                index += 1
+                continue
+
             #newdirectory = os.path.join(newdirectory, splitall(projectpath)[-1])
             if (resourceurl[0:4] == "http"):
                 #Remove the domain part
@@ -121,7 +131,7 @@ def extractExternalCSS(projectpath, HTMLpath, fileURL, file):
 
                 file[i] =  file[i][0:start]+cssdirectory+file[i][end:]
 
-            elif (resourceurl[0:3] == "../" or resourceurl[0].isalpha()):
+            elif resourceurl[0:4] != "data" and (resourceurl[0:3] == "../" or resourceurl[0].isalpha() or resourceurl[0] == '/'):
                 #If .. go 1 directory back
                 #folder/file.html
                 tmpresource = resourceurl.split("/")
