@@ -218,7 +218,7 @@ def writeMainFile(file, fileSaveName, path, fileHTMLName, fileURL, RoUL, urlsfet
         saveFile = open(fileSaveName, encoding='utf-8')
         file = saveFile.readlines()
         saveFile.close()
-        print("FilEHTML NAME later for split:", fileHTMLName)
+        ###print("FilEHTML NAME later for split:", fileHTMLName)
         file = extractExternalCSS(path, fileHTMLName, fileURL, file, urlsfetched);                    
         saveFile = open(fileSaveName, 'wb')
         for line in file:

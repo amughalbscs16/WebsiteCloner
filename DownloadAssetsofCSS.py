@@ -27,7 +27,8 @@ def downloadResource(path, storedirectory, downloadurl):
             saveFile.close()
             response = downloadedAsset.status
         #Print the Response value to see if it does work.
-        print("Internal Resource Downloads",downloadurl, storedirectory, )
+        if '2' in response or '3' in response:
+            print("Internal Resource Downloads",downloadurl, storedirectory, )
     except Exception as E:
         print("Download CSS Internal Issue: Failed Timeout", E)
 
@@ -100,7 +101,7 @@ def extractExternalCSS(projectpath, HTMLpath, fileURL, file, urlsfetched):
             if end-start == 0:
                 index += 1
                 continue
-            print(resourceurl)
+            #print(resourceurl)
             #print(resourceurl)
             #print(file[i])
             newdirectorysplit = splitall(HTMLpath)[0:-1]
