@@ -1,6 +1,6 @@
 from Downloader import *
-from chromeDriver import driver as browser
-
+from chromeDriver import driver 
+from chromeDriver import process_browser_log_entry_urls
 #Expects a url not ending with '/'
 def clearURL(url):
     while url[-1] == '/':
@@ -32,9 +32,9 @@ def cloner(url):
     #page = getFilefromURLLIB(url)
     #page = page.content
     #page = page.data
-    browser.get(url)
+    driver.get(url)
     time.sleep(5)
-    page = browser.page_source
+    page = driver.page_source
     #print(page)
     #print(page)
     #print(page.content)
@@ -60,7 +60,8 @@ def cloner(url):
     #print(images)
 
     #Downloading Assets
-    soup = downloadAllFiles(url, soup, path, files_dict, link_file)    
+    urlsfetched = process_browser_log_entry_urls(driver)
+    soup = downloadAllFiles(url, soup, path, files_dict, link_file, urlsfetched)    
 
     #soup.find('img')['src'] = DownloadFile(soup.find('img')['src'])
 
@@ -75,7 +76,7 @@ def cloner(url):
     fileURL = url+"/"+'index.html'
     fileHTMLName = 'index.html'
     print("Now downloading CSS in body of HTML file")
-    file = extractExternalCSS(path, fileHTMLName, fileURL, file);
+    file = extractExternalCSS(path, fileHTMLName, fileURL, file, urlsfetched);
     saveFile = open(fileDir, 'wb')
     for line in file:
         saveFile.write(line.encode('utf-8'))
@@ -89,22 +90,22 @@ def cloner(url):
 #Request Header for each website, and check which version extension is the file
 #and download accordingly.
 
-def downloadAllFiles(url, soup, path, files_dict, link_file):
+def downloadAllFiles(url, soup, path, files_dict, link_file, urlsfetched):
     downloadFavicon(url, path)
     for i in range(0,len(soup.findAll('link'))):
         #print(images[i]['src'])
         #print(soup.findAll('link')[i]['href'])
-        soup.findAll('link')[i]['href'] = DownloadFile(url,soup.findAll('link')[i]['href'],path,files_dict, link_file)
+        soup.findAll('link')[i]['href'] = DownloadFile(url,soup.findAll('link')[i]['href'],path,files_dict, link_file, urlsfetched)
     for i in range(0,len(soup.findAll('img'))):
         #print(soup.findAll('img')[i]['src'])
-        soup.findAll('img')[i]['src'] = DownloadFile(url,soup.findAll('img')[i]['src'], path, files_dict, link_file)
+        soup.findAll('img')[i]['src'] = DownloadFile(url,soup.findAll('img')[i]['src'], path, files_dict, link_file, urlsfetched)
 
     for i in range(0,len(soup.findAll('script'))):
         try:
             #print(soup.findAll('script')[i],'\n\n')
             if 'src' in str(soup.findAll('script')[i]): 
                 #print(soup.findAll('script')[i]['src'])
-                soup.findAll('script')[i]['src'] = DownloadFile(url,soup.findAll('script')[i]['src'],path,files_dict, link_file)
+                soup.findAll('script')[i]['src'] = DownloadFile(url,soup.findAll('script')[i]['src'],path,files_dict, link_file, urlsfetched)
         except:
             pass
     #Meta Content
@@ -113,7 +114,7 @@ def downloadAllFiles(url, soup, path, files_dict, link_file):
             #print(soup.findAll('script')[i],'\n\n')
             if 'content' in str(soup.findAll('meta')[i]): 
                 #print(soup.findAll('script')[i]['src'])
-                soup.findAll('meta')[i]['content'] = DownloadFile(url,soup.findAll('meta')[i]['content'],path,files_dict, link_file)
+                soup.findAll('meta')[i]['content'] = DownloadFile(url,soup.findAll('meta')[i]['content'],path,files_dict, link_file, urlsfetched)
         except:
             pass
             #print(soup.findAll('script'))

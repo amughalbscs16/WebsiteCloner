@@ -58,7 +58,7 @@ def getFileNameInDir(newdirectory, files_dict, split_path, fileExtensions, link_
             fileSaveName =  os.path.join(newdirectory,fileName)
         return fileSaveName
 
-def DownloadFile(url,fileURL, path, files_dict, link_file):
+def DownloadFile(url,fileURL, path, files_dict, link_file, urlsfetched):
 
     userAgent = UserAgent()
     RoUL = ''
@@ -169,7 +169,7 @@ def DownloadFile(url,fileURL, path, files_dict, link_file):
                 link_file[fileURL] = fileHTMLName
                 ##print(fileName+"; FileName")
                 #Check if the file is already in the directory_file originalname
-                fileHTMLName = writeMainFile(file, fileSaveName, path, fileHTMLName, fileURL, RoUL)
+                fileHTMLName = writeMainFile(file, fileSaveName, path, fileHTMLName, fileURL, RoUL, urlsfetched)
                 #print(files_dict)
                 #return fileSaveName
                 return fileHTMLName.replace('\\','/')
@@ -197,7 +197,7 @@ def cleanFileSaveName(file, fileName):
 
     return fileName
 
-def writeMainFile(file, fileSaveName, path, fileHTMLName, fileURL, RoUL):
+def writeMainFile(file, fileSaveName, path, fileHTMLName, fileURL, RoUL, urlsfetched):
     #saveFile = None
     #fileSaveName = cleanFileSaveName(file, fileSaveName)
     #fileHTMLName = cleanFileSaveName(file, fileHTMLName)
@@ -219,7 +219,7 @@ def writeMainFile(file, fileSaveName, path, fileHTMLName, fileURL, RoUL):
         file = saveFile.readlines()
         saveFile.close()
         print("FilEHTML NAME later for split:", fileHTMLName)
-        file = extractExternalCSS(path, fileHTMLName, fileURL, file);                    
+        file = extractExternalCSS(path, fileHTMLName, fileURL, file, urlsfetched);                    
         saveFile = open(fileSaveName, 'wb')
         for line in file:
             saveFile.write(line.encode('utf-8'))

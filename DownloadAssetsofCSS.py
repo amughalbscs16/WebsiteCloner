@@ -52,7 +52,7 @@ def makeResourceDirectory(projectSplit, resourceDirectorySplit):
             os.mkdir(newdirectory)
     filename = resourceDirectorySplit[-1].split("?")[0].split('#')[0]
     newdirectory = os.path.join(newdirectory,filename)
-    return newdirectory
+    return filename, newdirectory
 
 def splitall(path):
     allparts = []
@@ -72,7 +72,7 @@ def splitall(path):
 #def extractInternalCSS(projectpath, HTMLpath, fileURL, file):
 #    pass
 #Extracts both Internal and External Css if a file is sent
-def extractExternalCSS(projectpath, HTMLpath, fileURL, file):
+def extractExternalCSS(projectpath, HTMLpath, fileURL, file, urlsfetched):
     #find ("url") tags in the file
     splitProjectPath = splitall(projectpath)
     #print("CSS FILE:", projectpath, HTMLpath, fileURL)
@@ -115,6 +115,7 @@ def extractExternalCSS(projectpath, HTMLpath, fileURL, file):
             #newdirectory = os.path.join(newdirectory, splitall(projectpath)[-1])
             if (resourceurl[0:4] == "http"):
                 #Remove the domain part
+
                 resourceurl.replace("///",'/')
                 fetchURLsplit = resourceurl.split("//")[-1].split('/')
                 for k in range(0,len(fetchURLsplit)):
@@ -124,12 +125,13 @@ def extractExternalCSS(projectpath, HTMLpath, fileURL, file):
                         break
                     fetchURLsplit.pop(i)
                 #print(fetchURLsplit)
-                newdirectory = makeResourceDirectory(splitProjectPath, fetchURLsplit)
-                downloadResource(projectpath, newdirectory, resourceurl)
+                fileName, newdirectory = makeResourceDirectory(splitProjectPath, fetchURLsplit)
+                if fileName in urlsfetched:
+                    downloadResource(projectpath, newdirectory, resourceurl)
 
-                cssdirectory = getCssDirectory(fetchURLsplit)
+                    cssdirectory = getCssDirectory(fetchURLsplit)
 
-                file[i] =  file[i][0:start]+cssdirectory+file[i][end:]
+                    file[i] =  file[i][0:start]+cssdirectory+file[i][end:]
 
             elif resourceurl[0:4] != "data" and (resourceurl[0:3] == "../" or resourceurl[0].isalpha() or resourceurl[0] == '/'):
                 #If .. go 1 directory back
@@ -147,19 +149,19 @@ def extractExternalCSS(projectpath, HTMLpath, fileURL, file):
                 #Prepare save Directory
 
                 #create a folder for writing the file if not there:
-                newdirectory = makeResourceDirectory(splitProjectPath, newdirectorysplit)
+                fileName, newdirectory = makeResourceDirectory(splitProjectPath, newdirectorysplit)
 
                 #Prepare save URL
                 #print("fileURLsplit", fileURLsplit)
+                if fileName in urlsfetched:
+                    fileUrlResource = fileURLsplit[0]
+                    for k in fileURLsplit[1:]:
+                        fileUrlResource+= "/" + k
 
-                fileUrlResource = fileURLsplit[0]
-                for k in fileURLsplit[1:]:
-                    fileUrlResource+= "/" + k
-
-                filename = newdirectorysplit[-1].split("?")[0].split('#')[0]
-                newdirectory = os.path.join(newdirectory)
-                downloadResource(projectpath, newdirectory, fileUrlResource)
-            
+                    filename = newdirectorysplit[-1].split("?")[0].split('#')[0]
+                    newdirectory = os.path.join(newdirectory)
+                    downloadResource(projectpath, newdirectory, fileUrlResource)
+        
             #Since Line size can change
             lineSize = len(file[i])
             index += 1
