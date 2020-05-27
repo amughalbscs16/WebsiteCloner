@@ -92,7 +92,7 @@ def DownloadFile(url,fileURL, path, files_dict, link_file, urlsfetched):
         file = ''
         response = ''
         try:
-            file = requests.get(fileURL, headers=header, timeout=30)
+            file = requests.get(fileURL, headers=header, timeout=7)
             response = str(file).split('[')[1].split(']')[0][0]
             print("Requests Lib Response:", file)
             RoUL = 'R'

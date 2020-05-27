@@ -12,7 +12,7 @@ def getFilefromURLLIB(url):
 
 def downloadResource(path, storedirectory, downloadurl):
     try:
-        downloadedAsset = requests.get(downloadurl, timeout=10)
+        downloadedAsset = requests.get(downloadurl, timeout=3)
         saveFile = open(storedirectory, 'wb')
         response = str(downloadedAsset)
         if str(downloadedAsset).split('[')[1].split(']')[0][0] == '2':
